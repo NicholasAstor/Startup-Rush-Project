@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+    networks:
+      - app_network
+
+  backend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: django_backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DEBUG: ${DEBUG}
+      SECRET_KEY: ${SECRET_KEY}
+    volumes:
+      - ./client:/client
+      - static_files:/client/static
+      - media_files:/client/media
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+
+volumes:
+  static_files:
+  media_files:
