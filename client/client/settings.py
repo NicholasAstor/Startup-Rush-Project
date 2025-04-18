@@ -32,7 +32,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'startups.apps.StartupsConfig',
+    'battles',
+    'events',
+    'rounds',
+    'tournaments',
+    'startups',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

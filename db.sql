@@ -12,10 +12,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema startup_battle
 -- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema startup_battle
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `startup_battle` DEFAULT CHARACTER SET utf8 ;
 USE `startup_battle` ;
 
@@ -29,7 +25,6 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Startup` (
   `name` VARCHAR(100) NOT NULL,
   `slogan` VARCHAR(255) NOT NULL,
   `year_foundation` INT NOT NULL,
-  `score` INT NULL DEFAULT 70,
   `active` TINYINT NULL DEFAULT 1,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -43,10 +38,12 @@ DROP TABLE IF EXISTS `startup_battle`.`Tournament` ;
 CREATE TABLE IF NOT EXISTS `startup_battle`.`Tournament` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` ENUM('ongoing', 'done') NULL DEFAULT 'ongoing',
+  `qty_startups` INT NOT NULL,
+  `qty_rounds` INT NOT NULL,
   `champion_id` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `champion_id_idx` (`champion_id` ASC) VISIBLE,
-  CONSTRAINT `champion_id`
+  CONSTRAINT `champion_id_fk`
     FOREIGN KEY (`champion_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE CASCADE
@@ -66,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Round` (
   `status` ENUM('pending', 'ongoing', 'done') NULL DEFAULT 'pending',
   PRIMARY KEY (`id`),
   INDEX `tournament_id_idx` (`tournament_id` ASC) VISIBLE,
-  CONSTRAINT `tournament_id`
+  CONSTRAINT `tournament_id_fk`
     FOREIGN KEY (`tournament_id`)
     REFERENCES `startup_battle`.`Tournament` (`id`)
     ON DELETE NO ACTION
@@ -92,22 +89,22 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Battle` (
   INDEX `startup1_id_idx` (`startup1_id` ASC) VISIBLE,
   INDEX `startup2_id_idx` (`startup2_id` ASC) VISIBLE,
   INDEX `winner_id_idx` (`winner_id` ASC) VISIBLE,
-  CONSTRAINT `round_id`
+  CONSTRAINT `round_id_fk`
     FOREIGN KEY (`round_id`)
     REFERENCES `startup_battle`.`Round` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `startup1_id`
+  CONSTRAINT `startup1_id_fk`
     FOREIGN KEY (`startup1_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `startup2_id`
+  CONSTRAINT `startup2_id_fk`
     FOREIGN KEY (`startup2_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `winner_id`
+  CONSTRAINT `winner_id_fk`
     FOREIGN KEY (`winner_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE NO ACTION
@@ -143,17 +140,17 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Event_battle` (
   INDEX `battle_id_idx` (`battle_id` ASC) VISIBLE,
   INDEX `startup_id_idx` (`startup_id` ASC) VISIBLE,
   INDEX `event_id_idx` (`event_id` ASC) VISIBLE,
-  CONSTRAINT `battle_id`
+  CONSTRAINT `battle_id_fk`
     FOREIGN KEY (`battle_id`)
     REFERENCES `startup_battle`.`Battle` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `startup_id`
+  CONSTRAINT `startup_id_fk`
     FOREIGN KEY (`startup_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `event_id`
+  CONSTRAINT `event_id_fk`
     FOREIGN KEY (`event_id`)
     REFERENCES `startup_battle`.`Event` (`id`)
     ON DELETE NO ACTION
@@ -162,7 +159,7 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `startup_battle`.`Startup_Statistics`
+-- Tabela `startup_battle`.`Startup_Statistics`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `startup_battle`.`Startup_Statistics` ;
 
@@ -176,13 +173,55 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Startup_Statistics` (
   `total_sharkfights` INT NULL DEFAULT 0,
   `total_wins` INT NULL DEFAULT 0,
   PRIMARY KEY (`startup_id`),
-  CONSTRAINT `startup_id`
+  CONSTRAINT `startup_id_fk_1`
     FOREIGN KEY (`startup_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Tabela `startup_battle`.`Startup_tournament`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `startup_battle`.`Startup_tournament` ;
+
+CREATE TABLE IF NOT EXISTS `startup_battle`.`Startup_tournament` (
+  `startup_id` INT NOT NULL,
+  `tournament_id` INT NOT NULL,
+  `score` INT NULL DEFAULT 70,
+  INDEX `startup_id_idx` (`startup_id` ASC) VISIBLE,
+  INDEX `tournament_id_idx` (`tournament_id` ASC) VISIBLE,
+  CONSTRAINT `startup_id_fk_2`
+    FOREIGN KEY (`startup_id`)
+    REFERENCES `startup_battle`.`Startup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `tournament_id_fk1`
+    FOREIGN KEY (`tournament_id`)
+    REFERENCES `startup_battle`.`Tournament` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+INSERT INTO `startup_battle`.`Startup` (`name`, `slogan`, `year_foundation`, `active`)
+VALUES 
+('Painelconstru', 'Startup de preços da construção', 2015, 1),
+('Trius', 'Tecnopuc startup de criação de aplicativos', 2018, 1),
+('Exactor', 'Crafting Digital Solutions', 2020, 1),
+('Soluções em TI', 'Soluções em TI', 2010, 1),
+('Startup de TI', 'Startup de TI', 2015, 1),
+('Startup de TI 2', 'Startup de TI 2', 2015, 1),
+('Startup de TI 3', 'Startup de TI 3', 2015, 1),
+('Startup de TI 4', 'Startup de TI 4', 2015, 1),
+('Startup de TI 5', 'Startup de TI 5', 2015, 1);
+
+INSERT INTO `startup_battle`.`Event` (`name`, `description`, `impact_score`)
+VALUES 
+('Pitch convincente', 'Um pitch muito cativante', 6),
+('Produto com bugs', 'Independente de ser bom ou não apresenta bugs :(', -4),
+('Boa tração de usuários', 'O favorito de qualquer frontender', 3),
+('Investidor irritado', 'Se passou...', -6),
+('Fake news', 'Po mas aí ta de brincadeira', -8);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
