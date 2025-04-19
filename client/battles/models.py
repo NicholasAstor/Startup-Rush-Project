@@ -31,7 +31,7 @@ class EventBattle(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'EventBattle'
+        db_table = 'Event_battle'
 
     def __str__(self):
         return f"EventBattle {self.id}"

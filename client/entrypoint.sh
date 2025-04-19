@@ -4,6 +4,8 @@
 echo "Esperando banco"
 sleep 15
 
+python manage.py collectstatic --noinput
+
 echo "Migrations"
 python manage.py makemigrations
 python manage.py migrate --run-syncdb

@@ -33,8 +33,6 @@ services:
       SECRET_KEY: ${SECRET_KEY}
     volumes:
       - ./client:/client
-      - static_files:/client/static
-      - media_files:/client/media
     ports:
       - "8000:8000"
     networks:

@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Torneios | Startup Rush</title>
+    <link rel="stylesheet" href="{% static 'css/list_tournament.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">
+        <a href="{% url 'home' %}">
+          <i class="fas fa-trophy"></i> Startup Rush
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a
+              href="{% url 'home' %}"
+              class="{% if request.path == '/' %}active{% endif %}"
+            >
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li>
+            <a
+              href="{% url 'startups_list' %}"
+              class="{% if 'startups' in request.path %}active{% endif %}"
+            >
+              <i class="fas fa-building"></i> Startups
+            </a>
+          </li>
+          <li>
+            <a
+              href="{% url 'list_tournaments' %}"
+              class="{% if 'tournaments' in request.path %}active{% endif %}"
+            >
+              <i class="fas fa-trophy"></i> Torneios
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="{% if 'battles' in request.path %}active{% endif %}"
+            >
+              <i class="fas fa-fist-raised"></i> Batalhas
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="container">
+      <div class="page-content">
+        {% block content %}
+        <div class="tournament-page">
+          <div class="create-panel">
+            <h2>Criar Novo Torneio</h2>
+
+            <div class="quantity-selector">
+              <h3>Número de Startups</h3>
+              <div class="quantity-options">
+                <button class="quantity-btn" data-qty="4">4 Startups</button>
+                <button class="quantity-btn" data-qty="6">6 Startups</button>
+                <button class="quantity-btn" data-qty="8">8 Startups</button>
+              </div>
+              <p class="rounds-info" id="rounds-info">
+                O torneio terá 2 rodadas.
+              </p>
+            </div>
+
+            <h3>Selecione as Startups Participantes</h3>
+            <div class="startup-list">
+              {% for startup in startups %}
+              <div class="startup-item">
+                <input
+                  type="checkbox"
+                  class="startup-checkbox"
+                  id="startup-{{ startup.id }}"
+                  data-id="{{ startup.id }}"
+                />
+                <label for="startup-{{ startup.id }}">{{ startup.name }}</label>
+              </div>
+              {% endfor %}
+            </div>
+
+            <p class="selection-info" id="selection-info">
+              Selecionadas: 0 de 4 necessárias
+            </p>
+
+            <button id="create-btn" class="create-btn" disabled>
+              Criar Torneio
+            </button>
+          </div>
+
+          <div class="tournaments-panel">
+            <h2>Torneios</h2>
+
+            {% for tournament in tournaments %}
+            <div class="tournament-card">
+              <div class="tournament-header">
+                <h3 class="tournament-title">Torneio #{{ tournament.id }}</h3>
+                <span class="tournament-status status-{{ tournament.status }}">
+                  {{ tournament.get_status_display }}
+                </span>
+              </div>
+
+              <div class="tournament-meta">
+                <span>{{ tournament.qty_startups }} startups</span>
+                <span>{{ tournament.qty_rounds }} rodadas</span>
+              </div>
+
+              {% if tournament.champion %}
+              <p class="tournament-champion">
+                Campeão: {{ tournament.champion.name }}
+              </p>
+              {% endif %}
+
+              <a href="#" class="detail-btn">Ver Detalhes</a>
+            </div>
+            {% empty %}
+            <p>Nenhum torneio criado ainda.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const quantityBtns = document.querySelectorAll(".quantity-btn");
+            const startupCheckboxes =
+              document.querySelectorAll(".startup-checkbox");
+            const createBtn = document.getElementById("create-btn");
+            const selectionInfo = document.getElementById("selection-info");
+            const roundsInfo = document.getElementById("rounds-info");
+
+            let selectedQty = 4;
+            let selectedStartups = [];
+
+            quantityBtns.forEach((btn) => {
+              btn.addEventListener("click", function () {
+                // Atualizar seleção visual
+                quantityBtns.forEach((b) => b.classList.remove("selected"));
+                this.classList.add("selected");
+
+                selectedQty = parseInt(this.dataset.qty);
+
+                updateRoundsInfo();
+                updateSelectionInfo();
+                updateCreateButton();
+              });
+            });
+
+            startupCheckboxes.forEach((checkbox) => {
+              checkbox.addEventListener("change", function () {
+                const startupId = parseInt(this.dataset.id);
+
+                if (this.checked) {
+                  selectedStartups.push(startupId);
+                } else {
+                  selectedStartups = selectedStartups.filter(
+                    (id) => id !== startupId
+                  );
+                }
+
+                updateSelectionInfo();
+                updateCreateButton();
+              });
+            });
+
+            function updateRoundsInfo() {
+              const rounds = selectedQty === 4 ? 2 : selectedQty === 6 ? 3 : 4;
+              roundsInfo.textContent = `O torneio terá ${rounds} rodadas.`;
+            }
+
+            function updateSelectionInfo() {
+              selectionInfo.textContent = `Selecionadas: ${selectedStartups.length} de ${selectedQty} necessárias`;
+            }
+
+            function updateCreateButton() {
+              createBtn.disabled = selectedStartups.length !== selectedQty;
+            }
+
+            quantityBtns[0].click();
+
+            createBtn.addEventListener("click", async function () {
+              createBtn.disabled = true;
+              createBtn.textContent = "Criando...";
+
+              try {
+                const response = await fetch('{% url "create_tournament" %}', {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                  },
+                  body: JSON.stringify({
+                    qty_startups: selectedQty,
+                    startups: selectedStartups,
+                  }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                  window.location.reload();
+                } else {
+                  alert(data.message || "Erro ao criar torneio");
+                }
+              } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao criar torneio");
+              } finally {
+                createBtn.disabled = false;
+                createBtn.textContent = "Criar Torneio";
+              }
+            });
+          });
+        </script>
+        {% endblock %}
+      </div>
+    </main>
+  </body>
+</html>

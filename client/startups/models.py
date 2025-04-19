@@ -26,7 +26,7 @@ class StartupStatistics(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'StartupStatistics'
+        db_table = 'Startup_Statistics'
 
     def __str__(self):
         return f"Statistics for {self.startup.name}"

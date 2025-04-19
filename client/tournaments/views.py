@@ -1,83 +1,100 @@
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from django.shortcuts import render
-
-from .models import Tournament
-from .serializers import TournamentSerializer
-
-from startups.models import Startup
-from battles.models import Battle
-from rounds.models import Round
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 import random
 
-class CreateTournament(APIView):
-    def post(self, request):
-        qty_startups = request.data.get('qty_startups')
-        
-        if not qty_startups:
-            return Response({"success":False, "error":True, "message":"Quantity of startups is required"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            qty_startups = int(qty_startups)
-        
-        if qty_startups < 4 or qty_startups % 2 !=0 or qty_startups > 8:
-            return Response({"success":False, "error":True, "message":"Quantity of startups must be 4, 6 or 8"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        match qty_startups:
-            case 4:
-                qty_rounds = 2
-            case 6:
-                qty_rounds = 3
-            case 8:
-                qty_rounds = 4
-        
-        tournament = Tournament.objects.create(
-            qty_startups=qty_startups,
-            qty_rounds=qty_rounds,
-            status='ongoing'
-        )
+from django.db import transaction
+from startups.models import Startup
+from .models import Tournament, StartupTournament
+from rounds.models import Round 
+from battles.models import Battle
 
-        return Response({"success":True, "error":False, "message":"success", "data":{"id":tournament.id}}, status=status.HTTP_201_CREATED)
+def list_tournaments(request):
+    tournaments = Tournament.objects.all().order_by('-id')
+    startups = Startup.objects.filter(active=True)
+    
+    tournaments_data = []
+    for tournament in tournaments:
+        champion_name = tournament.champion.name if tournament.champion else None
+        tournaments_data.append({
+            'tournament': tournament,
+            'champion_name': champion_name
+        })
+    
+    return render(request, 'tournaments/list_tournaments.html', {
+        'tournaments': tournaments,
+        'startups': startups
+    })
 
-class StartTournament(APIView):
-    def post(self, request, *args, **kwargs):
-        tournament_id = kwargs.get('id')
-
-        if not tournament_id:
-            return Response({"success":False, "error":True, "message":"Tournament ID is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        tournament = Tournament.objects.filter(id=tournament_id).first()
-
-        if not tournament:
-            return Response({"success":False, "error":True, "message":"Tournament not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-        if tournament.status != 'ongoing':
-            return Response({"success":False, "error":True, "message":"Tournament is not ongoing"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        startups = list(Startup.objects.filter(active=True))
-        if len(startups) < tournament.qty_startups:
-            return Response({"success":False, "error":True, "message":"Not enough startups to start the tournament"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        selected_startups = random.sample(startups, tournament.qty_startups)
-
-        random.shuffle(selected_startups)
-
-        round = Round.objects.create(
-            tournament=tournament,
-            number=1,
-            status='ongoing'
-        )
-
-        for i in range(0, len(selected_startups), 2):
-            battle = Battle.objects.create(
-                startup1=selected_startups[i],
-                startup2=selected_startups[i+1],
-                round=round,
+@csrf_exempt
+@transaction.atomic
+def create_tournament(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            qty_startups = int(data['qty_startups'])
+            
+            if qty_startups not in [4, 6, 8]:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Quantidade de startups inválida (deve ser 4, 6 ou 8)'
+                }, status=400)
+            
+            if len(data['startups']) != qty_startups:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Selecione exatamente {qty_startups} startups'
+                }, status=400)
+            
+            qty_rounds = 2 if qty_startups == 4 else 3 if qty_startups == 6 else 4
+            
+            tournament = Tournament.objects.create(
+                qty_startups=qty_startups,
+                qty_rounds=qty_rounds,
+                status='ongoing'
+            )
+            
+            startup_ids = data['startups']
+            for startup_id in startup_ids:
+                StartupTournament.objects.create(
+                    startup_id=startup_id,
+                    tournament=tournament,
+                    score=70 
+                )
+            
+            round_1 = Round.objects.create(
+                tournament=tournament,
+                number=1,
                 status='pending'
             )
-
-        tournament.status = 'ongoing'
-        tournament.save()
-        return Response({"success":True, "error":False, "message":"Tournament started successfully"}, status=status.HTTP_200_OK)
+            
+            shuffled_startups = list(startup_ids)
+            random.shuffle(shuffled_startups)
+            
+            for i in range(0, len(shuffled_startups), 2):
+                Battle.objects.create(
+                    round=round_1,
+                    startup1_id=shuffled_startups[i],
+                    startup2_id=shuffled_startups[i+1],
+                    status='pending'
+                )
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Torneio criado com sucesso!',
+                'tournament_id': tournament.id,
+                'round_id': round_1.id,
+                'battles_created': qty_startups // 2
+            })
+            
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': f'Erro ao criar torneio: {str(e)}'
+            }, status=500)
+    
+    return JsonResponse({
+        'success': False,
+        'message': 'Método não permitido'
+    }, status=405)

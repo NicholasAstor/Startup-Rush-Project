@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Startup Rush</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">
+        <a href="{% url 'home' %}">
+          <i class="fas fa-trophy"></i> Startup Rush
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a
+              href="{% url 'home' %}"
+              class="{% if request.path == '/' %}active{% endif %}"
+            >
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li>
+            <a
+              href="{% url 'startups_list' %}"
+              class="{% if 'startups' in request.path %}active{% endif %}"
+            >
+              <i class="fas fa-building"></i> Startups
+            </a>
+          </li>
+          <li>
+            <a
+              href="{% url 'list_tournaments' %}"
+              class="{% if 'tournaments' in request.path %}active{% endif %}"
+            >
+              <i class="fas fa-trophy"></i> Torneios
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="{% if 'battles' in request.path %}active{% endif %}"
+            >
+              <i class="fas fa-fist-raised"></i> Batalhas
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="startup-rush-intro">
+        <h1>Startup Rush</h1>
+        <p>
+          Uma plataforma para gerenciar torneios de startups, monitorar batalhas
+          de pitch e acompanhar o crescimento das startups.
+        </p>
+        <div class="action-buttons">
+          <a href="{% url 'list_tournaments' %}" class="btn primary">
+            <i class="fas fa-trophy"></i> Ver Torneios
+          </a>
+          <a href="{% url 'startups_list' %}" class="btn secondary">
+            <i class="fas fa-building"></i> Gerenciar Startups
+          </a>
+        </div>
+      </section>
+
+      <section class="how-it-works">
+        <h2>Como Funciona</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Cadastre Startups</h3>
+            <p>
+              Adicione startups com nome, slogan e ano de fundação para
+              participar dos torneios.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Crie Torneios</h3>
+            <p>
+              Organize torneios com 4, 6 ou 8 startups em formato eliminatório.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Administre Batalhas</h3>
+            <p>
+              Registre eventos durante as batalhas de pitch e acompanhe as
+              estatísticas.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <h2>Startups</h2>
+          <p>
+            Gerencie suas startups, acompanhe estatísticas e acompanhe o
+            desempenho.
+          </p>
+          <a
+            href="{% url 'startups_list' %}"
+            class="btn primary"
+            style="margin-top: 1rem"
+          >
+            Gerenciar Startups
+          </a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h2>Torneios</h2>
+          <p>Crie e gerencie torneios competitivos entre startups.</p>
+          <a
+            href="{% url 'list_tournaments' %}"
+            class="btn primary"
+            style="margin-top: 1rem"
+          >
+            Ver Torneios
+          </a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-fist-raised"></i>
+          </div>
+          <h2>Batalhas</h2>
+          <p>Administre batalhas de pitch entre startups e registre eventos.</p>
+          <a href="#" class="btn primary" style="margin-top: 1rem">
+            Gerenciar Batalhas
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-logo">
+          <h2>Startup Rush</h2>
+          <p>A competição definitiva de startups</p>
+        </div>
+        <div class="footer-links">
+          <h3>Links Rápidos</h3>
+          <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'startups_list' %}">Startups</a></li>
+            <li><a href="{% url 'list_tournaments' %}">Torneios</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Startup Rush. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+  </body>
+</html>

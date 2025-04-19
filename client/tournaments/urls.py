@@ -1,10 +1,7 @@
 from django.urls import path
-from .views import *
+from . import views
 
 urlpatterns = [
-    path("create/", CreateTournament.as_view(), name="create_tournament"),
-    path("<int:id>/start/", StartTournament.as_view(), name="start_tournament"),
-    #path("<int:id>/"),
-    #path("<int:id>/rounds/"),
-    #path("<int:id>/current-round/"),
+    path('', views.list_tournaments, name='list_tournaments'),
+    path('create/', views.create_tournament, name='create_tournament'),
 ]
