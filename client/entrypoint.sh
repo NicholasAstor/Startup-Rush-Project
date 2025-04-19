@@ -6,7 +6,7 @@ sleep 15
 
 python manage.py collectstatic --noinput
 
-echo "Migrations"
+echo "Migrações"
 python manage.py makemigrations
 python manage.py migrate --run-syncdb
 

@@ -12,7 +12,7 @@
     />
   </head>
   <body>
-    <header class="navbar">
+    <header class="cabecalho">
       <div class="logo">
         <a href="{% url 'home' %}">
           <i class="fas fa-trophy"></i> Startup Rush
@@ -31,7 +31,7 @@
           <li>
             <a
               href="{% url 'startups_list' %}"
-              class="{% if 'startups' in request.path %}active{% endif %}"
+              class="{% if 'startups' in request.path %}active {% endif %}"
             >
               <i class="fas fa-building"></i> Startups
             </a>
@@ -57,13 +57,13 @@
     </header>
 
     <main>
-      <section class="startup-rush-intro">
+      <section class="introducao">
         <h1>Startup Rush</h1>
         <p>
           Uma plataforma para gerenciar torneios de startups, monitorar batalhas
           de pitch e acompanhar o crescimento das startups.
         </p>
-        <div class="action-buttons">
+        <div class="botoes">
           <a href="{% url 'list_tournaments' %}" class="btn primary">
             <i class="fas fa-trophy"></i> Ver Torneios
           </a>
@@ -73,26 +73,26 @@
         </div>
       </section>
 
-      <section class="how-it-works">
+      <section class="como-funciona">
         <h2>Como Funciona</h2>
-        <div class="steps">
-          <div class="step">
-            <div class="step-number">1</div>
+        <div class="passos">
+          <div class="passo">
+            <div class="numero-passo">1</div>
             <h3>Cadastre Startups</h3>
             <p>
               Adicione startups com nome, slogan e ano de fundação para
               participar dos torneios.
             </p>
           </div>
-          <div class="step">
-            <div class="step-number">2</div>
+          <div class="passo">
+            <div class="numero-passo">2</div>
             <h3>Crie Torneios</h3>
             <p>
               Organize torneios com 4, 6 ou 8 startups em formato eliminatório.
             </p>
           </div>
-          <div class="step">
-            <div class="step-number">3</div>
+          <div class="passo">
+            <div class="numero-passo">3</div>
             <h3>Administre Batalhas</h3>
             <p>
               Registre eventos durante as batalhas de pitch e acompanhe as
@@ -103,8 +103,8 @@
       </section>
 
       <section class="features">
-        <div class="feature-card">
-          <div class="feature-icon">
+        <div class="card-feature">
+          <div class="icon-feature">
             <i class="fas fa-building"></i>
           </div>
           <h2>Startups</h2>
@@ -121,8 +121,8 @@
           </a>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">
+        <div class="card-feature">
+          <div class="icon-feature">
             <i class="fas fa-trophy"></i>
           </div>
           <h2>Torneios</h2>
@@ -136,8 +136,8 @@
           </a>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">
+        <div class="card-feature">
+          <div class="icon-feature">
             <i class="fas fa-fist-raised"></i>
           </div>
           <h2>Batalhas</h2>
@@ -150,12 +150,12 @@
     </main>
 
     <footer>
-      <div class="footer-content">
-        <div class="footer-logo">
+      <div class="content-footer">
+        <div class="logo-footer">
           <h2>Startup Rush</h2>
           <p>A competição definitiva de startups</p>
         </div>
-        <div class="footer-links">
+        <div class="links-footer">
           <h3>Links Rápidos</h3>
           <ul>
             <li><a href="{% url 'home' %}">Home</a></li>
@@ -164,7 +164,7 @@
           </ul>
         </div>
       </div>
-      <div class="footer-bottom">
+      <div class="bottom-footer">
         <p>&copy; 2025 Startup Rush. Todos os direitos reservados.</p>
       </div>
     </footer>

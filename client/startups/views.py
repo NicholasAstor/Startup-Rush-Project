@@ -9,15 +9,11 @@ from .forms import StartupForm
 def home(request): #Landing page
     return render(request, 'home.html')
 
-def startups_list(request):#Retorna todas as startups ativas e suas devidas estatísticas
+def startups_list(request):#retorna todas as startups ativas e suas devidas estatísticas
     startups = Startup.objects.filter(active=True)
     startupstats = StartupStatistics.objects.filter(startup__in=startups)
     
-    context = {
-        'startups': startups,
-        'has_startups': startups.exists(),
-        'startupstats': startupstats
-    }
+    context = {'startups': startups,'has_startups': startups.exists(), 'startupstats': startupstats}
     
     return render(request, 'startups/list_startups.html', context)
 
@@ -31,36 +27,16 @@ def create_startup(request): #Cria uma nova startup
             year_foundation = data.get('year_foundation')
             
             if not name or not slogan or not year_foundation:
-                return JsonResponse({
-                    'success': False,
-                    'message': 'Todos os campos são obrigatórios'
-                }, status=400)
+                return JsonResponse({'success': False,'message': 'Todos os campos são obrigatórios'}, status=400)
             
-            startup = Startup(
-                name=name,
-                slogan=slogan,
-                year_foundation=year_foundation,
-                active=True
-            )
+            startup = Startup(name=name,slogan=slogan, year_foundation=year_foundation, active=True)
             startup.save()
             
-            StartupStatistics.objects.create(startup=startup)
+            StartupStatistics.objects.create( startup=startup)
             
-            return JsonResponse({
-                'success': True,
-                'message': 'Startup criada com sucesso',
-                'startup': {
-                    'id': startup.id,
-                    'name': startup.name,
-                    'slogan': startup.slogan,
-                    'year_foundation': startup.year_foundation
-                }
-            })
+            return JsonResponse({'success': True,'message': 'Startup criada com sucesso :)','startup':{'id':startup.id,'name':startup.name,'slogan': startup.slogan,'year_foundation':startup.year_foundation}})
         except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'message': f'Erro ao criar startup: {str(e)}'
-            }, status=500)
+            return JsonResponse({'success': False,'message': f'Erro ao criar startup: {str(e)} :('}, status=500)
     
     return JsonResponse({'success': False, 'message': 'Método não permitido'}, status=405)
 
@@ -71,9 +47,9 @@ def delete_startup(request, startup_id):#Deleta uma startup
         if not startup:
             return JsonResponse({'success': False, 'message': 'Startup não encontrada'}, status=404)
         startup.delete()
-        return JsonResponse({'success': True, 'message': 'Startup deletada com sucesso'})
+        return JsonResponse({'success': True, 'message': 'startup deletada com sucesso :)'})
     except Exception as e:
-        return JsonResponse({'success': False, 'message': f'Erro ao deletar startup: {str(e)}'}, status=500)
+        return JsonResponse({'success': False, 'message': f'Erro ao deletar startup: {str(e)} :('}, status=500)
 
 def manage_startups(request): #TODO
     startups = Startup.objects.all()

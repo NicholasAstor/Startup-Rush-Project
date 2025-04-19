@@ -12,7 +12,7 @@
     />
   </head>
   <body>
-    <header class="navbar">
+    <header class="cabecalho">
       <div class="logo">
         <a href="{% url 'home' %}">
           <i class="fas fa-trophy"></i> Startup Rush
@@ -31,7 +31,7 @@
           <li>
             <a
               href="{% url 'startups_list' %}"
-              class="{% if 'startups' in request.path %}active{% endif %}"
+              class="{% if 'startups' in request.path %} active {% endif %}"
             >
               <i class="fas fa-building"></i> Startups
             </a>
@@ -47,7 +47,7 @@
           <li>
             <a
               href="#"
-              class="{% if 'battles' in request.path %}active{% endif %}"
+              class="{% if 'battles' in request.path %}active {% endif %}"
             >
               <i class="fas fa-fist-raised"></i> Batalhas
             </a>
@@ -56,13 +56,13 @@
       </nav>
     </header>
 
-    <main class="container">
-      <div class="page-content">
-        <div class="add-startup-form">
+    <main class="main">
+      <div class="conteudo">
+        <div class="formulario">
           <h2>Adicionar Startup</h2>
-          <form id="startup-form">
+          <form id="formulario-startup">
             {% csrf_token %}
-            <div class="form-group">
+            <div class="grupo-formulario">
               <label for="startup-name">Nome</label>
               <input
                 type="text"
@@ -72,7 +72,7 @@
                 required
               />
             </div>
-            <div class="form-group">
+            <div class="grupo-formulario">
               <label for="startup-slogan">Slogan</label>
               <input
                 type="text"
@@ -82,7 +82,7 @@
                 required
               />
             </div>
-            <div class="form-group">
+            <div class="grupo-formulario">
               <label for="startup-year">Ano de Fundação</label>
               <input
                 type="number"
@@ -94,7 +94,7 @@
                 required
               />
             </div>
-            <div class="form-actions">
+            <div class="acoes-formulario">
               <button type="submit" class="btn-primary">
                 <i class="fas fa-plus"></i> Adicionar Startup
               </button>
@@ -102,45 +102,45 @@
           </form>
         </div>
 
-        <div class="startups-content">
+        <div class="startups">
           <h2>Startups Cadastradas</h2>
 
           {% if startups %}
-          <div class="startups-list">
+          <div class="list-startups">
             {% for startup in startups %}
-            <div class="startup-card">
+            <div class="card-startup">
               <h3>{{ startup.name }}</h3>
               <span class="year">Desde {{ startup.year_foundation }}</span>
               <p class="slogan">{{ startup.slogan }}</p>
 
-              <div class="stats-grid">
-                <div class="stat-row">
-                  <span class="stat-label">Vitórias:</span>
-                  <span class="stat-value"
+              <div class="estatisticas">
+                <div class="coluna-estatisticas">
+                  <span class="label-estatisticas">Vitórias:</span>
+                  <span class="valor-estatisticas"
                     >{{ startupstats.total_wins|default:"0" }}</span
                   >
                 </div>
-                <div class="stat-row">
-                  <span class="stat-label">Pitches:</span>
-                  <span class="stat-value"
+                <div class="coluna-estatisticas">
+                  <span class="label-estatisticas">Pitches:</span>
+                  <span class="valor-estatisticas"
                     >{{ startupstats.total_pitches|default:"0" }}</span
                   >
                 </div>
-                <div class="stat-row">
-                  <span class="stat-label">Tração:</span>
-                  <span class="stat-value"
+                <div class="coluna-estatisticas">
+                  <span class="label-estatisticas">Tração:</span>
+                  <span class="valor-estatisticas"
                     >{{ startupstats.total_traction|default:"0" }}</span
                   >
                 </div>
-                <div class="stat-row">
-                  <span class="stat-label">Shark Fights:</span>
-                  <span class="stat-value"
+                <div class="coluna-estatisticas">
+                  <span class="label-estatisticas">Shark Fights:</span>
+                  <span class="valor-estatisticas"
                     >{{ startupstats.total_sharkfights|default:"0" }}</span
                   >
                 </div>
               </div>
 
-              <div class="action-buttons">
+              <div class="botoes">
                 <button class="btn-remove" data-id="{{ startup.id }}">
                   <i class="fas fa-trash"></i> Remover
                 </button>
@@ -149,7 +149,7 @@
             {% endfor %}
           </div>
           {% else %}
-          <div class="empty-state">
+          <div class="caso-vazio">
             <h3>Nenhuma startup cadastrada</h3>
             <p>Cadastre sua primeira startup usando o formulário</p>
           </div>
@@ -160,7 +160,7 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const startupForm = document.getElementById("startup-form");
+        const startupForm = document.getElementById("formulario-startup");
 
         startupForm.addEventListener("submit", function (event) {
           event.preventDefault();
@@ -191,7 +191,7 @@
             })
             .catch((error) => {
               console.error("Erro:", error);
-              alert("Ocorreu um erro ao cadastrar a startup");
+              alert("ocorreu um erro a registrar esta startup");
             });
         });
 
@@ -201,12 +201,10 @@
           button.addEventListener("click", function () {
             const startupId = this.getAttribute("data-id");
 
-            if (confirm("Tem certeza que deseja remover esta startup?")) {
+            if (confirm("Tem certeza que deseja deletar esta startup??")) {
               fetch(`/startups/delete/${startupId}/`, {
                 method: "DELETE",
-                headers: {
-                  "X-CSRFToken": "{{ csrf_token }}",
-                },
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
               })
                 .then((response) => response.json())
                 .then((data) => {
@@ -219,7 +217,7 @@
                 })
                 .catch((error) => {
                   console.error("Erro:", error);
-                  alert("Ocorreu um erro ao remover a startup.");
+                  alert("Ocorreu um erro ao deletar a startup. :(");
                 });
             }
           });

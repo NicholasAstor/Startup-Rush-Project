@@ -12,7 +12,7 @@
     />
   </head>
   <body>
-    <header class="navbar">
+    <header class="cabecalho">
       <div class="logo">
         <a href="{% url 'home' %}">
           <i class="fas fa-trophy"></i> Startup Rush
@@ -56,31 +56,37 @@
       </nav>
     </header>
     <main class="container">
-      <div class="page-content">
+      <div class="conteudo">
         {% block content %}
-        <div class="tournament-page">
-          <div class="create-panel">
+        <div class="pagina-torneios">
+          <div class="criar-torneio">
             <h2>Criar Novo Torneio</h2>
 
-            <div class="quantity-selector">
+            <div class="selecionar-quantidade">
               <h3>Número de Startups</h3>
-              <div class="quantity-options">
-                <button class="quantity-btn" data-qty="4">4 Startups</button>
-                <button class="quantity-btn" data-qty="6">6 Startups</button>
-                <button class="quantity-btn" data-qty="8">8 Startups</button>
+              <div class="opcoes-quantidade">
+                <button class="botao-quantidade" data-qty="4">
+                  4 Startups
+                </button>
+                <button class="botao-quantidade" data-qty="6">
+                  6 Startups
+                </button>
+                <button class="botao-quantidade" data-qty="8">
+                  8 Startups
+                </button>
               </div>
-              <p class="rounds-info" id="rounds-info">
+              <p class="info-rounds" id="info-rounds">
                 O torneio terá 2 rodadas.
               </p>
             </div>
 
             <h3>Selecione as Startups Participantes</h3>
-            <div class="startup-list">
+            <div class="lista-startups">
               {% for startup in startups %}
-              <div class="startup-item">
+              <div class="startups">
                 <input
                   type="checkbox"
-                  class="startup-checkbox"
+                  class="check-startups"
                   id="startup-{{ startup.id }}"
                   data-id="{{ startup.id }}"
                 />
@@ -89,39 +95,37 @@
               {% endfor %}
             </div>
 
-            <p class="selection-info" id="selection-info">
+            <p class="selecionadas" id="selecionadas">
               Selecionadas: 0 de 4 necessárias
             </p>
 
-            <button id="create-btn" class="create-btn" disabled>
-              Criar Torneio
-            </button>
+            <button id="criar" class="criar" disabled>Criar Torneio</button>
           </div>
 
-          <div class="tournaments-panel">
+          <div class="painel-torneios">
             <h2>Torneios</h2>
 
             {% for tournament in tournaments %}
-            <div class="tournament-card">
-              <div class="tournament-header">
-                <h3 class="tournament-title">Torneio #{{ tournament.id }}</h3>
-                <span class="tournament-status status-{{ tournament.status }}">
+            <div class="card-torneio">
+              <div class="header-torneio">
+                <h3 class="titulo-torneio">Torneio #{{ tournament.id }}</h3>
+                <span class="status-torneio status-{{ tournament.status }}">
                   {{ tournament.get_status_display }}
                 </span>
               </div>
 
-              <div class="tournament-meta">
+              <div class="meta-torneio">
                 <span>{{ tournament.qty_startups }} startups</span>
                 <span>{{ tournament.qty_rounds }} rodadas</span>
               </div>
 
               {% if tournament.champion %}
-              <p class="tournament-champion">
+              <p class="campeao-torneio">
                 Campeão: {{ tournament.champion.name }}
               </p>
               {% endif %}
 
-              <a href="#" class="detail-btn">Ver Detalhes</a>
+              <a href="#" class="detalhes">Ver Detalhes</a>
             </div>
             {% empty %}
             <p>Nenhum torneio criado ainda.</p>
@@ -131,12 +135,12 @@
 
         <script>
           document.addEventListener("DOMContentLoaded", function () {
-            const quantityBtns = document.querySelectorAll(".quantity-btn");
+            const quantityBtns = document.querySelectorAll(".botao-quantidade");
             const startupCheckboxes =
-              document.querySelectorAll(".startup-checkbox");
-            const createBtn = document.getElementById("create-btn");
-            const selectionInfo = document.getElementById("selection-info");
-            const roundsInfo = document.getElementById("rounds-info");
+              document.querySelectorAll(".check-startups");
+            const createBtn = document.getElementById("criar");
+            const selectionInfo = document.getElementById("selecionadas");
+            const roundsInfo = document.getElementById("info-rounds");
 
             let selectedQty = 4;
             let selectedStartups = [];

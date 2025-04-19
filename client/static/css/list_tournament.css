@@ -24,7 +24,7 @@ body {
   line-height: 1.6;
 }
 
-.navbar {
+.cabecalho {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,7 +80,7 @@ nav ul li a.active {
   border-radius: 4px;
 }
 
-.tournament-page {
+.pagina-torneios {
   display: grid;
   grid-template-columns: 350px 1fr;
   gap: 2rem;
@@ -89,7 +89,7 @@ nav ul li a.active {
   padding: 2rem;
 }
 
-.create-panel {
+.criar-torneio {
   background: white;
   border-radius: 10px;
   padding: 1.5rem;
@@ -98,24 +98,24 @@ nav ul li a.active {
   top: 1rem;
 }
 
-.create-panel h2 {
+.criar-torneio h2 {
   color: var(--primary-color);
   margin-bottom: 1.5rem;
   border-bottom: 2px solid var(--primary-light);
   padding-bottom: 0.5rem;
 }
 
-.quantity-selector {
+.selecionar-quantidade {
   margin-bottom: 1.5rem;
 }
 
-.quantity-options {
+.opcoes-quantidade {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
-.quantity-btn {
+.botao-quantidade {
   flex: 1;
   padding: 0.5rem;
   border: 2px solid var(--light-gray);
@@ -126,23 +126,23 @@ nav ul li a.active {
   transition: all 0.2s;
 }
 
-.quantity-btn:hover {
+.botao-quantidade:hover {
   border-color: var(--primary-color);
 }
 
-.quantity-btn.selected {
+.botao-quantidade.selected {
   background: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
 }
 
-.rounds-info {
+.info-rounds {
   color: var(--gray);
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
 }
 
-.startup-list {
+.lista-startups {
   max-height: 500px;
   overflow-y: auto;
   margin-bottom: 1.5rem;
@@ -151,27 +151,27 @@ nav ul li a.active {
   padding: 0.5rem;
 }
 
-.startup-item {
+.startups {
   padding: 0.75rem;
   border-bottom: 1px solid var(--light-gray);
   display: flex;
   align-items: center;
 }
 
-.startup-item:last-child {
+.startups:last-child {
   border-bottom: none;
 }
 
-.startup-checkbox {
+.check-startups {
   margin-right: 0.75rem;
 }
 
-.selection-info {
+.selecionadas {
   margin: 1rem 0;
   font-weight: 500;
 }
 
-.create-btn {
+.criar {
   width: 100%;
   padding: 0.75rem;
   background: var(--primary-color);
@@ -183,19 +183,19 @@ nav ul li a.active {
   transition: background 0.2s;
 }
 
-.create-btn:disabled {
+.criar:disabled {
   background: var(--gray);
   cursor: not-allowed;
 }
 
-.tournaments-panel {
+.painel-torneios {
   background: white;
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
 }
 
-.tournament-card {
+.card-torneio {
   border-left: 4px solid var(--primary-color);
   border-radius: 5px;
   padding: 1.25rem;
@@ -204,24 +204,24 @@ nav ul li a.active {
   transition: transform 0.2s;
 }
 
-.tournament-card:hover {
+.card-torneio:hover {
   transform: translateY(-3px);
 }
 
-.tournament-header {
+.header-torneio {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
-.tournament-title {
+.titulo-torneio {
   color: var(--primary-color);
   font-weight: bold;
   margin: 0;
 }
 
-.tournament-status {
+.status-torneio {
   display: inline-block;
   padding: 0.25rem 0.5rem;
   border-radius: 20px;
@@ -239,7 +239,7 @@ nav ul li a.active {
   color: white;
 }
 
-.tournament-meta {
+.meta-torneio {
   display: flex;
   gap: 1rem;
   color: var(--gray);
@@ -247,13 +247,13 @@ nav ul li a.active {
   margin-bottom: 0.5rem;
 }
 
-.tournament-champion {
+.campeao-torneio {
   font-style: italic;
   color: var(--success-color);
   margin-top: 0.5rem;
 }
 
-.detail-btn {
+.detalhes {
   display: inline-block;
   margin-top: 0.75rem;
   padding: 0.4rem 1rem;
@@ -265,13 +265,13 @@ nav ul li a.active {
   transition: background 0.2s;
 }
 
-.detail-btn:hover {
+.detalhes:hover {
   background: var(--primary-color);
   color: white;
 }
 
 @media (max-width: 768px) {
-  .navbar {
+  .cabecalho {
     flex-direction: column;
     gap: 1rem;
   }
@@ -283,11 +283,11 @@ nav ul li a.active {
 }
 
 @media (max-width: 992px) {
-  .tournament-page {
+  .pagina-torneios {
     grid-template-columns: 1fr;
   }
 
-  .create-panel {
+  .criar-torneio {
     position: static;
   }
 }

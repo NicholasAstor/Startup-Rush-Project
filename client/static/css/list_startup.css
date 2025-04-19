@@ -20,7 +20,7 @@ body {
   line-height: 1.6;
 }
 
-.navbar {
+.cabecalho {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -70,19 +70,19 @@ nav ul li a:hover {
   text-decoration: underline;
 }
 
-.container {
+.main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
 
-.page-content {
+.conteudo {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-.add-startup-form {
+.formulario {
   background-color: var(--white);
   border-radius: 8px;
   padding: 2rem;
@@ -90,23 +90,23 @@ nav ul li a:hover {
   height: fit-content;
 }
 
-.add-startup-form h2 {
+.formulario h2 {
   margin-bottom: 1.5rem;
   color: var(--text-color);
   font-size: 1.5rem;
 }
 
-.form-group {
+.grupo-formulario {
   margin-bottom: 1.2rem;
 }
 
-.form-group label {
+.grupo-formulario label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
-.form-group input {
+.grupo-formulario input {
   width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
@@ -114,13 +114,13 @@ nav ul li a:hover {
   font-size: 1rem;
 }
 
-.form-group input:focus {
+.grupo-formulario input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(103, 71, 237, 0.1);
 }
 
-.form-actions {
+.acoes-formulario {
   margin-top: 1.5rem;
   text-align: right;
 }
@@ -147,33 +147,33 @@ nav ul li a:hover {
   background-color: var(--primary-hover);
 }
 
-.startups-content {
+.startups {
   background-color: var(--white);
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.281);
 }
 
-.startups-content h2 {
+.startups h2 {
   margin-bottom: 1.5rem;
   color: var(--text-color);
   font-size: 1.5rem;
 }
 
-.startups-list {
+.list-startups {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 }
 
-.startup-card {
+.card-startup {
   border: 1px solid #eee;
   border-radius: 8px;
   padding: 1.5rem;
   position: relative;
 }
 
-.startup-card h3 {
+.card-startup h3 {
   color: var(--primary-color);
   margin-bottom: 0.3rem;
   display: flex;
@@ -181,7 +181,7 @@ nav ul li a:hover {
   font-size: 1.2rem;
 }
 
-.startup-card h3::before {
+.card-startup h3::before {
   content: "";
   font-family: "Font Awesome 6 Free";
   content: "\f135";
@@ -189,44 +189,44 @@ nav ul li a:hover {
   color: var(--primary-color);
 }
 
-.startup-card .year {
+.card-startup .year {
   font-size: 0.8rem;
   color: var(--gray);
   display: block;
   margin-bottom: 0.5rem;
 }
 
-.startup-card .slogan {
+.card-startup .slogan {
   font-style: italic;
   margin-bottom: 1rem;
   color: var(--text-color);
   font-size: 0.9rem;
 }
 
-.stats-grid {
+.estatisticas {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.7rem;
 }
 
-.stat-row {
+.coluna-estatisticas {
   display: flex;
   justify-content: space-between;
   padding: 0.3rem 0;
   font-size: 0.9rem;
 }
 
-.stat-label {
+.label-estatisticas {
   color: var(--gray);
   font-weight: 500;
 }
 
-.stat-value {
+.valor-estatisticas {
   font-weight: 600;
   color: var(--primary-color);
 }
 
-.action-buttons {
+.botoes {
   margin-top: 1.5rem;
   text-align: right;
 }
@@ -250,17 +250,17 @@ nav ul li a:hover {
   margin-right: 0.3rem;
 }
 
-.empty-state {
+.caso-vazio {
   text-align: center;
   padding: 3rem 1rem;
 }
 
-.empty-state h3 {
+.caso-vazio h3 {
   color: var(--gray);
   margin-bottom: 0.5rem;
 }
 
-.empty-state p {
+.caso-vazio p {
   color: var(--gray);
 }
 
@@ -271,21 +271,21 @@ nav ul li a.active {
 }
 
 @media (min-width: 768px) {
-  .page-content {
+  .conteudo {
     flex-direction: row;
   }
 
-  .add-startup-form {
+  .formulario {
     width: 35%;
   }
 
-  .startups-content {
+  .startups {
     width: 65%;
   }
 }
 
 @media (max-width: 767px) {
-  .navbar {
+  .cabecalho {
     flex-direction: column;
     padding: 1rem;
   }
@@ -303,11 +303,11 @@ nav ul li a.active {
     margin: 0 0.7rem;
   }
 
-  .container {
+  .main {
     padding: 1rem;
   }
 
-  .startups-list {
+  .list-startups {
     grid-template-columns: 1fr;
   }
 }

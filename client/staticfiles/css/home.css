@@ -20,7 +20,7 @@ body {
   line-height: 1.6;
 }
 
-.navbar {
+.cabecalho {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -70,25 +70,25 @@ nav ul li a:hover {
   text-decoration: underline;
 }
 
-.startup-rush-intro {
+.como-funciona {
   text-align: center;
   padding: 4rem 5%;
   background-color: var(--primary-color);
   color: var(--white);
 }
 
-.startup-rush-intro h1 {
+.como-funciona h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
 }
 
-.startup-rush-intro p {
+.como-funciona p {
   font-size: 1.1rem;
   max-width: 800px;
   margin: 0 auto 2rem;
 }
 
-.action-buttons {
+.botoes {
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -128,19 +128,19 @@ nav ul li a:hover {
   background-color: #f0f0f0;
 }
 
-.how-it-works {
+.como-funciona {
   padding: 4rem 5%;
   background-color: var(--white);
   text-align: center;
 }
 
-.how-it-works h2 {
+.como-funciona h2 {
   font-size: 2rem;
   margin-bottom: 3rem;
   color: var(--dark-color);
 }
 
-.steps {
+.passos {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -149,14 +149,14 @@ nav ul li a:hover {
   margin: 0 auto;
 }
 
-.step {
+.passo {
   flex: 1;
   min-width: 250px;
   max-width: 350px;
   position: relative;
 }
 
-.step-number {
+.numero-passo {
   width: 50px;
   height: 50px;
   background-color: var(--primary-color);
@@ -170,13 +170,13 @@ nav ul li a:hover {
   margin: 0 auto 1.5rem;
 }
 
-.step h3 {
+.passo h3 {
   font-size: 1.4rem;
   margin-bottom: 1rem;
   color: var(--dark-color);
 }
 
-.step p {
+.passo p {
   color: var(--gray);
 }
 
@@ -190,11 +190,11 @@ nav ul li {
   align-items: center;
 }
 
-.steps {
+.passos {
   position: relative;
 }
 
-.step:not(:last-child)::after {
+.passo:not(:last-child)::after {
   content: "→";
   position: absolute;
   right: -30px;
@@ -214,7 +214,7 @@ nav ul li {
   background-color: var(--white);
 }
 
-.feature-card {
+.card-feature {
   flex: 1;
   min-width: 250px;
   max-width: 350px;
@@ -225,7 +225,7 @@ nav ul li {
   text-align: center;
 }
 
-.feature-icon {
+.icon-feature {
   background-color: rgba(103, 71, 237, 0.1);
   width: 70px;
   height: 70px;
@@ -236,17 +236,17 @@ nav ul li {
   margin: 0 auto 1.5rem;
 }
 
-.feature-icon i {
+.icon-feature i {
   font-size: 1.8rem;
   color: var(--primary-color);
 }
 
-.feature-card h2 {
+.card-feature h2 {
   margin-bottom: 1rem;
   font-size: 1.4rem;
 }
 
-.feature-card p {
+.card-feature p {
   color: var(--gray);
 }
 
@@ -256,45 +256,45 @@ footer {
   padding: 3rem 5% 1rem;
 }
 
-.footer-content {
+.content-footer {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   margin-bottom: 2rem;
 }
 
-.footer-logo h2 {
+.logo-footer h2 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
 }
 
-.footer-logo p {
+.logo-footer p {
   color: var(--gray);
 }
 
-.footer-links h3 {
+.links-footer h3 {
   font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 
-.footer-links ul {
+.links-footer ul {
   list-style: none;
 }
 
-.footer-links ul li {
+.links-footer ul li {
   margin-bottom: 0.5rem;
 }
 
-.footer-links ul li a {
+.links-footer ul li a {
   color: var(--gray);
   text-decoration: none;
 }
 
-.footer-links ul li a:hover {
+.links-footer ul li a:hover {
   color: var(--white);
 }
 
-.footer-bottom {
+.bottom-footer {
   text-align: center;
   padding-top: 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -309,7 +309,7 @@ nav ul li a.active {
 }
 
 @media (max-width: 768px) {
-  .navbar {
+  .cabecalho {
     flex-direction: column;
     gap: 1rem;
   }
@@ -324,12 +324,12 @@ nav ul li a.active {
     align-items: center;
   }
 
-  .footer-content {
+  .content-footer {
     flex-direction: column;
     gap: 2rem;
   }
 
-  .step:not(:last-child)::after {
+  .passo:not(:last-child)::after {
     display: none;
   }
 }
