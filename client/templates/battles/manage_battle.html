@@ -1,0 +1,272 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Battle | Startup Rush</title>
+    <link rel="stylesheet" href="{% static 'css/manage_battle.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!--Como todos os outros, barra de navegação da página-->
+    <header class="cabecalho">
+      <div class="logo">
+        <a href="{% url 'home' %}">
+          <i class="fas fa-trophy"></i> Startup Rush
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'startups_list' %}" class="{% if 'startups' in request.path %}active {% endif %}">
+              <i class="fas fa-building"></i> Startups
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'list_tournaments' %}" class="{% if 'tournaments' in request.path %}active{% endif %}">
+              <i class="fas fa-trophy"></i> Torneios
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'pending_battles' %}" class="{% if 'battles' in request.path %}active{% endif %}">
+              <i class="fas fa-fist-raised"></i> Batalhas
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="main">
+      <div class="conteudo">
+        <div class="container">
+          <div class="card-batalha">
+            <div class="header-batalha">
+              <h2 class="titulo-batalha">
+                <i class="fas fa-bolt"></i> Batalha {{ battle.id }}
+              </h2>
+              <!--Temos apenas o status de pendente, batalhas concluídas não podem entrar nessa tela-->
+              <span class="status">Pendente</span>
+            </div>
+
+            <div class="conteudo-batalha">
+              <!--Informações da primeira startup-->
+              <div class="startup">
+                <i class="fas fa-rocket icone-startup"></i>
+                <span class="nome-startup" id="startup1-name">{{ battle.startup1.name }}</span>
+                <span class="pontuacao" id="score-{{ battle.startup1.id }}">{{ startup1_tournament.score }}</span>
+              </div>
+              <div class="container-progresso">
+                <div class="progresso" id="progress-{{ battle.startup1.id }}" style="width: {{ startup1_tournament.score }}%;"></div>
+              </div>
+
+              <div class="vs">vs</div>
+              
+              <!--Informações da segunda startup-->
+              <div class="startup">
+                <i class="fas fa-rocket icone-startup"></i>
+                <span class="nome-startup" id="startup2-name">{{ battle.startup2.name }}</span>
+                <span class="pontuacao" id="score-{{ battle.startup2.id }}">{{ startup2_tournament.score }}</span>
+              </div>
+              <div class="container-progresso">
+                <div class="progresso" id="progress-{{ battle.startup2.id }}" style="width: {{ startup2_tournament.score }}%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="secao-gerenciar"> <!-- Seção para colocar os eventos em suas devidas startups (gerenciamento)-->
+            <h2 class="titulo-secao">
+              <i class="fas fa-bolt"></i> Gerenciar Batalha
+            </h2>
+
+            <div class="form-group">
+              <label class="evento">Registrar Evento</label>
+            </div>
+
+            <div class="grid-startups">
+              <div class="card-startup">
+                <h3 class="nome-startup">{{ battle.startup1.name }}</h3>
+
+                <div class="input">
+                  <select id="event-select-{{ battle.startup1.id }}" class="evento-selecionado">
+                    <option value="">Selecione o evento</option>
+                    <!--Exibe cada evento com seus pesos na pontuação-->
+                    {% for event in events %}
+                      <option value="{{ event.id }}" {% if event.id in startup1_events %} disabled {% endif %} data-impacto="{{ event.impact_score }}">
+                        {{ event.name }} (
+                        {% if event.impact_score > 0 %}
+                          {{ event.impact_score|stringformat:"+d" }}
+                        {% else %}
+                          {{ event.impact_score }}
+                        {% endif %}
+                        pontos)
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <!--Botão para adicionar o evento a startup-->
+                  <button onclick="adicionaEvento({{ battle.id }}, {{ battle.startup1.id }})" class="adiciona-evento">
+                    Adicionar Evento
+                  </button>
+                </div>
+
+                <div class="lista-eventos" id="events-list-{{ battle.startup1.id }}">
+                  <h4 class="titulo-evento">Eventos Registrados</h4>
+                  <ul class="eventos">
+                    <!--Aqui mostra os eventos registrados pra aquela statup-->
+                    {% for be in battle_events %} 
+                      {% if be.startup == battle.startup1 %}
+                        <li class="item-evento">
+                          <span>{{ be.event.name }}</span>
+                          <span class="{% if be.event.impact_score >= 0 %}event-impacto-positive{% else %}event-impacto-negative{% endif %}">
+                            {% if be.event.impact_score > 0 %}
+                              {{ be.event.impact_score|stringformat:"+d" }}
+                            {% else %}
+                              {{ be.event.impact_score }}
+                            {% endif %}
+                          </span>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="card-startup">
+                <h3 class="nome-startup">{{ battle.startup2.name }}</h3>
+
+                <div class="input">
+                  <select id="event-select-{{ battle.startup2.id }}" class="evento-selecionado">
+                    <!--Basicamente um copia e cola da lógica anterior-->
+                    <option value="">Selecione o evento</option>
+                    {% for event in events %}
+                      <option value="{{ event.id }}" {% if event.id in startup2_events %} disabled {% endif %} data-impacto="{{ event.impact_score }}">
+                        {{ event.name }} (
+                        {% if event.impact_score > 0 %}
+                          {{ event.impact_score|stringformat:"+d" }}
+                        {% else %}
+                          {{ event.impact_score }}
+                        {% endif %}
+                        pontos)
+                    </option>
+                    {% endfor %}
+                  </select>
+                  <button onclick="adicionaEvento({{ battle.id }}, {{ battle.startup2.id }})" class="adiciona-evento">
+                    Adicionar Evento
+                  </button>
+                </div>
+
+                <div class="lista-eventos" id="events-list-{{ battle.startup2.id }}">
+                  <h4 class="titulo-evento">Eventos Registrados</h4>
+                  <ul class="eventos">
+                    {% for be in battle_events %}
+                      {% if be.startup == battle.startup2 %}
+                        <li class="item-evento">
+                          <span>{{ be.event.name }}</span>
+                          <span class="{% if be.event.impact_score >= 0 %}event-impacto-positive{% else %}event-impacto-negative{% endif %}">
+                            {% if be.event.impact_score > 0 %}
+                              {{ be.event.impact_score|stringformat:"+d" }} 
+                            {% else %}
+                              {{ be.event.impact_score }}
+                            {% endif %}
+                          </span>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="botao">
+            <button onclick="completaBatalha({{ battle.id }})" class="concluir-batalha">
+              Concluir Batalha
+            </button>
+          </div>
+        </div>
+
+        <script>
+          function atualizaBarraProgresso(startupId, score) { // Tive que limitar a largura da barra de progresso pra ela não ultrapassar 100%
+            const width = Math.min(score, 100);
+            document.getElementById(`progress-${startupId}`).style.width = `${width}%`;
+          }
+
+          document.addEventListener('DOMContentLoaded', function() {
+            atualizaBarraProgresso({{ battle.startup1.id }}, {{ startup1_tournament.score }});
+            atualizaBarraProgresso({{ battle.startup2.id }}, {{ startup2_tournament.score }});
+          }); // Necessário para atualizar a barra de progresso em tempo real
+
+          function adicionaEvento(battleId, startupId) {
+            const selecaoEventos = document.getElementById(`event-select-${startupId}`);
+            const idEvento = selecaoEventos.value;
+
+            if (!idEvento) {
+              alert('É preciso selecionar algum evento');
+              return;
+            }
+
+            // Adicionar evento para uma startup específica, usado na hora da batalha
+            fetch(`/battles/${battleId}/add-event/`, {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': '{{ csrf_token }}'}, body: `startup_id=${startupId}&event_id=${idEvento}`})
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                const elementopontuacao = document.getElementById(`score-${startupId}`);
+                elementopontuacao.textContent = data.score; // Atualiza a pontuação da startup na batalha
+
+                atualizaBarraProgresso(startupId, data.score);
+
+                selecaoEventos.querySelector(`option[value="${idEvento}"]`).disabled = true; // Deixar a opção escolhida desabbilitada (a startup não pode tomar duas vezes a mesma coisa)
+                selecaoEventos.value = '';
+
+                const listaEventos = document.getElementById(`events-list-${startupId}`).querySelector('ul');
+                const opcoes = selecaoEventos.querySelector(`option[value="${idEvento}"]`);
+                const nomeEvento = opcoes.textContent.split('(')[0].trim();
+                const impacto = opcoes.dataset.impacto;
+                // Preciso criar um novo elemento de lista para adicionar o evento
+                const lista = document.createElement('li');
+                lista.className = 'item-evento'; // Definir classe pro elemento (CSS)
+                lista.innerHTML = `
+                  <span>${nomeEvento}</span>
+                  <span class="${impacto >= 0 ? 'event-impacto-positive' : 'event-impacto-negative'}">
+                    ${impacto >= 0 ? '+' + impacto : impacto}
+                  </span>
+                `;
+                listaEventos.appendChild(lista);
+              } else {
+                alert(data.message);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Erro adicionar o evento a startup');
+            });
+          }
+
+          // Endpoint de conclusão de batalha
+          function completaBatalha(battleId) {
+            if (confirm('Quer concluir a batalha?')) {
+              fetch(`/battles/${battleId}/complete/`, {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': '{{ csrf_token }}'}})
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  window.location.href = `{% url 'pending_battles' %}`;
+                } else {
+                  alert(data.message);
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert('Erro ao concluindo a batalha');
+              });
+            }
+          }
+        </script>
+      </div>
+    </main>
+  </body>
+</html>

@@ -5,6 +5,9 @@
 
 use startup_battle;
 
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET collation_connection = 'utf8mb4_0900_ai_ci';
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -12,7 +15,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema startup_battle
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `startup_battle` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `startup_battle` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `startup_battle` ;
 
 -- -----------------------------------------------------
@@ -26,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Startup` (
   `slogan` VARCHAR(255) NOT NULL,
   `year_foundation` INT NOT NULL,
   `active` TINYINT NULL DEFAULT 1,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`)) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
 
 
@@ -47,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Tournament` (
     FOREIGN KEY (`champion_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
 
 
@@ -67,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Round` (
     FOREIGN KEY (`tournament_id`)
     REFERENCES `startup_battle`.`Tournament` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
 
 
@@ -80,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Battle` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `round_id` INT NOT NULL,
   `startup1_id` INT NOT NULL,
-  `startup2_id` INT NOT NULL,
+  `startup2_id` INT,
   `winner_id` INT NULL,
   `status` ENUM('pending', 'done') NULL DEFAULT 'pending',
   `shark_fight` TINYINT NULL DEFAULT 0,
@@ -108,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Battle` (
     FOREIGN KEY (`winner_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
 
 
@@ -122,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Event` (
   `name` VARCHAR(50) NOT NULL,
   `description` VARCHAR(200) NULL,
   `impact_score` INT NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`)) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
 
 
@@ -154,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Event_battle` (
     FOREIGN KEY (`event_id`)
     REFERENCES `startup_battle`.`Event` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
 
 
@@ -177,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Startup_Statistics` (
     FOREIGN KEY (`startup_id`)
     REFERENCES `startup_battle`.`Startup` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -200,20 +203,8 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Startup_tournament` (
     FOREIGN KEY (`tournament_id`)
     REFERENCES `startup_battle`.`Tournament` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
-
-INSERT INTO `startup_battle`.`Startup` (`name`, `slogan`, `year_foundation`, `active`)
-VALUES 
-('Painelconstru', 'Startup de preços da construção', 2015, 1),
-('Trius', 'Tecnopuc startup de criação de aplicativos', 2018, 1),
-('Exactor', 'Crafting Digital Solutions', 2020, 1),
-('Soluções em TI', 'Soluções em TI', 2010, 1),
-('Startup de TI', 'Startup de TI', 2015, 1),
-('Startup de TI 2', 'Startup de TI 2', 2015, 1),
-('Startup de TI 3', 'Startup de TI 3', 2015, 1),
-('Startup de TI 4', 'Startup de TI 4', 2015, 1),
-('Startup de TI 5', 'Startup de TI 5', 2015, 1);
 
 INSERT INTO `startup_battle`.`Event` (`name`, `description`, `impact_score`)
 VALUES 

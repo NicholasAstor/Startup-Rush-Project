@@ -23,7 +23,5 @@ urlpatterns = [
     path('', include("startups.urls")),
     path("admin/", admin.site.urls),
     path("tournaments/", include("tournaments.urls")),
-    path("rounds/", include("rounds.urls")),
-    path("battles/", include("battles.urls")),
-    path("events/", include("events.urls")),
+    path("battles/", include("battles.urls"), name="battles"),
 ] + static (settings.STATIC_URL, document_root=settings.STATIC_ROOT)

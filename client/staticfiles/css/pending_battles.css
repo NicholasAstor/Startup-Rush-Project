@@ -1,0 +1,265 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body {
+    background-color: white;
+    color: #212b36;
+    line-height: 1.6;
+  }
+  
+  .cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: #121262f1;
+    color:white;
+  }
+  
+  .logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo i {
+    margin-right: 0.5rem;
+  }
+  
+  nav ul {
+    display: flex;
+    list-style: none;
+    align-items: center;
+  }
+  
+  nav ul li {
+    margin-left: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  nav ul {
+    align-items: center;
+  }
+  
+  nav ul li {
+    margin-left: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+  }
+  
+  nav ul li a i {
+    margin-right: 0.25rem;
+  }
+  
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 2rem;
+}
+nav ul li a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+  }
+/* Grid layout for battles */
+.grid-batalhas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* Battle card */
+.card-batalha {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    border-top: 5px solid #ffc107;
+}
+
+.card-batalha:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-batalha.done {
+    border-top-color: #28a745;
+}
+
+/* Battle header */
+.header-batalha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.titulo-batalha {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.status-batalha {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.status-done {
+    background-color: #28a745;
+    color: #fff;
+}
+
+/* Battle content */
+.conteudo-batalha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.startup {
+    flex: 1;
+    text-align: center;
+    padding: 1.25rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.startup:hover {
+    background-color: #e9ecef;
+}
+
+.vs {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin: 0 1rem;
+    position: relative;
+    top: 2px;
+}
+
+.nome-startup {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #495057;
+    margin-bottom: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.pontuacao-startup {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #121262f1;
+}
+
+/* Manage battle button */
+.gerenciar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    background-color: #121262f1;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.gerenciar:hover {
+    background-color: #3a56e4;
+    color: white;
+    text-decoration: none;
+}
+
+.gerenciar i {
+    margin-right: 0.5rem;
+}
+
+/* No battles message */
+.no-battles {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .grid-batalhas {
+        grid-template-columns: 1fr;
+    }
+
+    nav ul {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    
+    .conteudo-batalha {
+        flex-direction: column;
+    }
+    
+    .startup {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .startup:first-child {
+        margin-bottom: 1rem;
+    }
+    
+    .vs {
+        margin: 0.5rem 0;
+    }
+}

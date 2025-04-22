@@ -1,0 +1,338 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: white;
+  color: #212b36;
+  line-height: 1.6;
+}
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background-color: #121262f1;
+  color: white;
+}
+
+.logo a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.logo i {
+  margin-right: 0.5rem;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+
+nav ul li {
+  margin-left: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+nav ul li a i {
+  margin-right: 0.25rem;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+nav ul li a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Cartão de Batalha */
+.card-batalha {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border: 1px solid white;
+}
+
+.header-batalha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid white;
+}
+
+.titulo-batalha {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.titulo-batalha i {
+  color: #f59e0b;
+  margin-right: 0.5rem;
+}
+
+.status {
+  background-color: white;
+  color: #0284c7;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* Conteúdo da Batalha */
+.conteudo-batalha {
+  padding: 1rem;
+}
+
+.startup {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.grid-startups {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.card-startup {
+  border: 1px solid white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.icone-startup {
+  margin-right: 0.5rem;
+  color: #121262f1;
+}
+
+.nome-startup {
+  flex: 1;
+  font-weight: 500;
+}
+
+.pontuacao {
+  font-weight: 600;
+  min-width: 2rem;
+  text-align: right;
+}
+
+.container-progresso {
+  height: 0.5rem;
+  background-color: white;
+  border-radius: 1rem;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+
+.progresso {
+  height: 100%;
+  background-color: #121262f1;
+  border-radius: 1rem;
+}
+
+.vs {
+  text-align: center;
+  margin: 1rem 0;
+  color: #6b7280;
+  font-weight: 500;
+  position: relative;
+}
+
+.vs::before,
+.vs::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background-color: white;
+}
+
+.vs::before {
+  left: 0;
+}
+
+.vs::after {
+  right: 0;
+}
+
+/* Seção de Gerenciar Batalha */
+.secao-gerenciar {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid white;
+}
+
+.titulo-secao {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.titulo-secao i {
+  margin-right: 0.5rem;
+  color: #121262f1;
+}
+
+.evento {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #212b36;
+}
+
+.evento-selecionado {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid white;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  background-color: white;
+}
+
+.input {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.input select {
+  flex: 1;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.adiciona-evento {
+  background-color: #121262f1;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.adiciona-evento:hover {
+  background-color: #2952cc;
+}
+
+.lista-eventos {
+  margin-top: 1rem;
+}
+
+.titulo-evento {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #212b36;
+}
+
+.eventos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item-evento {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid white;
+  font-size: 0.875rem;
+}
+
+.item-evento:last-child {
+  border-bottom: none;
+}
+
+.event-impacto-positive {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.event-impacto-negative {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+
+.botao {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.concluir-batalha {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+}
+
+.concluir-batalha:hover {
+  background-color: #12863d;
+}
+
+

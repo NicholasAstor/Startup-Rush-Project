@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Torneio | Startup Rush</title>
+    <link rel="stylesheet" href="{% static 'css/tournament_detail.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  </head>
+  <body>
+    <!--Novamente a mesma barra de navegação-->
+    <header class="cabecalho">
+      <div class="logo">
+        <a href="{% url 'home' %}">
+          <i class="fas fa-trophy"></i> Startup Rush
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'startups_list' %}" class="{% if 'startups' in request.path %}active {% endif %}">
+              <i class="fas fa-building"></i> Startups
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'list_tournaments' %}" class="{% if 'tournaments' in request.path %}active{% endif %}">
+              <i class="fas fa-trophy"></i> Torneios
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'pending_battles' %}" class="{% if 'battles' in request.path %}active{% endif %}">
+              <i class="fas fa-fist-raised"></i> Batalhas
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="container">
+      <div class="conteudo">
+        <div class="container-torneio">
+          <a href="{% url 'list_tournaments' %}" class="voltar">
+            <i class="fas fa-arrow-left"></i> Voltar para Torneios
+          </a>
+        
+          <div class="header-torneio">
+            <h1 class="titulo-torneio">Torneio #{{ tournament.id }}</h1>
+            <div class="torneio-meta">
+              <span class="item-meta">{{ tournament.qty_startups }} startups</span>
+              <span class="item-meta">{{ tournament.qty_rounds }} rodadas</span>
+              <span class="status status-{{ tournament.status }}">{{ tournament.get_status_display }}</span>
+            </div>
+          </div>
+        
+          {% if tournament.champion %}
+          <!--Queria fazer uma tabela com as estatisticas bonita, mas o meu arquivo css por algum motivo não estava lendo no momento, aí perdi umas 2 horas da minha vida fazendo na mão :)-->
+          <div class="campeao-torneio" style="background: linear-gradient(135deg, #28a745, #1e7e34); color: white; padding: 12px 24px; border-radius: 30px; display: inline-flex; align-items: center; margin: 20px 0; font-weight: 700; font-size: 18px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
+            <i class="fas fa-trophy" style="margin-right: 12px; font-size: 20px;"></i> Campeão: {{ tournament.champion.name }}
+          </div>
+          
+          <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin: 30px 0; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);">
+            <thead>
+              <tr>
+                <th style="background: linear-gradient(135deg, #121262, #4029c0); color: white; font-weight: 600; padding: 16px 20px; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; border: none; text-align: left;">Posição</th>
+                <th style="background: linear-gradient(135deg, #121262, #4029c0); color: white; font-weight: 600; padding: 16px 20px; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; border: none; text-align: left;">Startup</th>
+                <th style="background: linear-gradient(135deg, #121262, #4029c0); color: white; font-weight: 600; padding: 16px 20px; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; border: none; text-align: center;">Pontuação</th>
+                <th style="background: linear-gradient(135deg, #121262, #4029c0); color: white; font-weight: 600; padding: 16px 20px; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; border: none; text-align: center;">Vitórias</th>
+                <th style="background: linear-gradient(135deg, #121262, #4029c0); color: white; font-weight: 600; padding: 16px 20px; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; border: none; text-align: center;">Pitches</th>
+                <th style="background: linear-gradient(135deg, #121262, #4029c0); color: white; font-weight: 600; padding: 16px 20px; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; border: none; text-align: center;">Bugs</th>
+                <th style="background: linear-gradient(135deg, #121262, #4029c0); color: white; font-weight: 600; padding: 16px 20px; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; border: none; text-align: center;">Tração</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for participant in participants %}
+              <tr style="{% if participant.startup.id == tournament.champion.id %}background-color: rgba(40, 167, 69, 0.08); border-left: 4px solid #28a745;{% endif %}">
+                <td style="padding: 16px 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; font-size: 15px; text-align: left;">
+                  {% if forloop.first %}
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, gold, #ffd700); color: #8a6d00; font-weight: bold; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">1</span>
+                  {% elif forloop.counter == 2 %}
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, silver, #c0c0c0); color: #555; font-weight: bold; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">2</span>
+                  {% elif forloop.counter == 3 %}
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #cd7f32, #b87333); color: white; font-weight: bold; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">3</span>
+                  {% else %}
+                    {{ forloop.counter }}
+                  {% endif %}
+                </td>
+                <td style="padding: 16px 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; font-size: 15px; font-weight: {% if participant.startup.id == tournament.champion.id %}600{% else %}500{% endif %}; color: {% if participant.startup.id == tournament.champion.id %}#28a745{% else %}#333{% endif %};">
+                  {{ participant.startup.name }}
+                  {% if participant.startup.id == tournament.champion.id %}
+                    <span style="margin-left: 8px; background-color: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;"><i class="fas fa-crown" style="margin-right: 4px;"></i>Campeão</span>
+                  {% endif %}
+                </td>
+                <td style="padding: 16px 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; font-size: 15px; text-align: center; font-weight: 600; color: #121262;">{{ participant.score }}</td>
+                <td style="padding: 16px 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; font-size: 15px; text-align: center;">{{ participant.startup.startupstatistics.total_wins }}</td>
+                <td style="padding: 16px 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; font-size: 15px; text-align: center;">{{ participant.startup.startupstatistics.total_pitches }}</td>
+                <td style="padding: 16px 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; font-size: 15px; text-align: center;">{{ participant.startup.startupstatistics.total_bugs }}</td>
+                <td style="padding: 16px 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; font-size: 15px; text-align: center;">{{ participant.startup.startupstatistics.total_traction }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+            <!-- Se não tem nenhum campeão vai aparecer as rodadas e todas as startups participantes normalmente -->
+            {% for round in rounds %}
+            <div class="round">
+              <h2 class="titulo-round">
+                Rodada {{ round.object.number }} de {{ tournament.qty_rounds }}
+              </h2>
+        
+              <div class="grid-batalhas">
+                {% for battle in round.battles %}
+                <div class="card-batalha {{ battle.status }}">
+                  <div class="header-batalha">
+                    <h3 class="titulo-batalha">Batalha {{ forloop.counter }}</h3>
+                    <span class="status-batalha status-{{ battle.status }}">
+                      {{ battle.get_status_display }}
+                    </span>
+                  </div>
+        
+                  <div class="conteudo-batalha">
+                    <div class="startup">
+                      <div class="nome-startup">{{ battle.startup1.name }}</div>
+                      <div class="pontuacao-startup">
+                        {{ battle.startup1_score }}
+                      </div>
+                    </div>
+        
+                    <span class="vs">VS</span>
+        
+                    <div class="startup">
+                      <div class="nome-startup">{{ battle.startup2.name }}</div>
+                      <div class="pontuacao-startup">
+                        {{ battle.startup2_score }}
+                      </div>
+                    </div>
+                  </div>
+        
+                  {% if battle.status == 'pending' %}
+                  <a href="#" class="gerenciar" data-id-battle="{{ battle.id }}">
+                    <i class="fas fa-trophy"></i> Gerenciar Batalha
+                  </a>
+                  {% endif %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+        
+            <div class="secao-participantes">
+              <h2 class="titulo-secao">Startups Participantes</h2>
+              <div class="grid-participantes">
+                {% for participant in participants %}
+                <div class="card-participantes">
+                  <div class="nome-participante">
+                    {{ participant.startup.name }}
+                  </div>
+                  <div class="pontuacao-participante">
+                    Score: {{ participant.score }}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <script>
+          // Nesse js a única coisa que temos é o redirecionamento do usuário para a página de batalhas depois de clicar no botão devido
+          document.addEventListener("DOMContentLoaded", function () {
+            const gerenciar = document.querySelectorAll(".gerenciar");
+
+            gerenciar.forEach((button) => {
+              button.addEventListener("click", function (e) {
+                e.preventDefault();
+                const idBattle = this.dataset.idBattle;
+                window.location.href = `{% url 'manage_battle' 0 %}`.replace("0", idBattle);
+              });
+            });
+          });
+        </script>
+      </div>
+    </main>
+  </body>
+</html>

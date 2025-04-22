@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Startups | Startup Rush</title>
+    <link rel="stylesheet" href="{% static 'css/pending_battles.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  </head>
+  <body>
+    <!--Barra de navegação na parte de cima da página, igual a da home-->
+    <header class="cabecalho">
+      <div class="logo">
+        <a href="{% url 'home' %}">
+          <i class="fas fa-trophy"></i> Startup Rush
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'startups_list' %}" class="{% if 'startups' in request.path %} active {% endif %}">
+              <i class="fas fa-building"></i> Startups
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'list_tournaments' %}" class="{% if 'tournaments' in request.path %}active{% endif %}">
+              <i class="fas fa-trophy"></i> Torneios
+            </a>
+          </li>
+          <li>
+            <a href="#" class="{% if 'battles' in request.path %}active {% endif %}">
+              <i class="fas fa-fist-raised"></i> Batalhas
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <h1 class="page-title">{{ title }}</h1>
+            
+            <div class="grid-batalhas">
+                {% for battle in battles %}
+                <div class="card-batalha {{ battle.status }}">
+                    <div class="header-batalha">
+                        <h3 class="titulo-batalha">Batalha {{ battle.id }}</h3>
+                        <span class="status-batalha status-{{ battle.status }}">
+                            {{ battle.get_status }}
+                        </span>
+                    </div>
+        
+                    <div class="conteudo-batalha">
+                        <div class="startup">
+                            <div class="nome-startup">{{ battle.startup1.name }}</div>
+                            <div class="pontuacao-startup" style = "color: #121262;">
+                                {{ battle.startup1_score }}
+                            </div>
+                        </div>
+        
+                        <span class="vs">VS</span>
+        
+                        <div class="startup">
+                            <div class="nome-startup">{{ battle.startup2.name }}</div>
+                            <div class="pontuacao-startup" style="color: #121262;">
+                                {{ battle.startup2_score }}
+                            </div>
+                        </div>
+                    </div>
+        
+                    {% if battle.status == 'pending' %}
+                    <a href="#" class="gerenciar" data-id-battle="{{ battle.id }}" style="background-color: #121262f1; ">
+                        <i class="fas fa-trophy"></i> Gerenciar Batalha
+                    </a>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="no-battles">
+                    <p>Não há batalhas disponíveis no momento.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gerenciarLinks = document.querySelectorAll('.gerenciar');
+            
+            gerenciarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const idBattle = this.dataset.idBattle;
+                    window.location.href = `{% url 'manage_battle' 0 %}`.replace("0", idBattle);
+                });
+            });
+        });
+    </script>
+  </body>
+</html>

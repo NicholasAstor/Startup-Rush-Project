@@ -6,12 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Startup Rush</title>
     <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   </head>
   <body>
+    <!--Barra de navegação (eu não sou um grande frontender mas estou tentando meu maximo :) )-->
     <header class="cabecalho">
       <div class="logo">
         <a href="{% url 'home' %}">
@@ -21,34 +19,23 @@
       <nav>
         <ul>
           <li>
-            <a
-              href="{% url 'home' %}"
-              class="{% if request.path == '/' %}active{% endif %}"
-            >
+            <!--Navegação entre as páginas que vão ser implementadas-->
+            <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
               <i class="fas fa-home"></i> Home
             </a>
           </li>
           <li>
-            <a
-              href="{% url 'startups_list' %}"
-              class="{% if 'startups' in request.path %}active {% endif %}"
-            >
+            <a href="{% url 'startups_list' %}" class="{% if 'startups' in request.path %}active {% endif %}">
               <i class="fas fa-building"></i> Startups
             </a>
           </li>
           <li>
-            <a
-              href="{% url 'list_tournaments' %}"
-              class="{% if 'tournaments' in request.path %}active{% endif %}"
-            >
+            <a href="{% url 'list_tournaments' %}" class="{% if 'tournaments' in request.path %}active{% endif %}">
               <i class="fas fa-trophy"></i> Torneios
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              class="{% if 'battles' in request.path %}active{% endif %}"
-            >
+            <a href="{% url 'pending_battles' %}" class="{% if 'battles' in request.path %}active{% endif %}">
               <i class="fas fa-fist-raised"></i> Batalhas
             </a>
           </li>
@@ -57,11 +44,11 @@
     </header>
 
     <main>
+      <!--Minha intenção é fazer uma landing page convidativa para o usuário entender o processo e conseguir usar de forma simples a plataforma-->
       <section class="introducao">
         <h1>Startup Rush</h1>
         <p>
-          Uma plataforma para gerenciar torneios de startups, monitorar batalhas
-          de pitch e acompanhar o crescimento das startups.
+          Uma plataforma para gerenciar torneios de startups, monitorar batalhas de pitch e acompanhar o crescimento das startups.
         </p>
         <div class="botoes">
           <a href="{% url 'list_tournaments' %}" class="btn primary">
@@ -80,8 +67,7 @@
             <div class="numero-passo">1</div>
             <h3>Cadastre Startups</h3>
             <p>
-              Adicione startups com nome, slogan e ano de fundação para
-              participar dos torneios.
+              Adicione startups com nome, slogan e ano de fundação para participar dos torneios.
             </p>
           </div>
           <div class="passo">
@@ -95,8 +81,7 @@
             <div class="numero-passo">3</div>
             <h3>Administre Batalhas</h3>
             <p>
-              Registre eventos durante as batalhas de pitch e acompanhe as
-              estatísticas.
+              Registre eventos durante as batalhas de pitch e acompanhe as estatísticas.
             </p>
           </div>
         </div>
@@ -109,14 +94,9 @@
           </div>
           <h2>Startups</h2>
           <p>
-            Gerencie suas startups, acompanhe estatísticas e acompanhe o
-            desempenho.
+            Gerencie suas startups, acompanhe estatísticas e acompanhe o desempenho.
           </p>
-          <a
-            href="{% url 'startups_list' %}"
-            class="btn primary"
-            style="margin-top: 1rem"
-          >
+          <a href="{% url 'startups_list' %}" class="btn primary" style="margin-top: 1rem">
             Gerenciar Startups
           </a>
         </div>
@@ -127,11 +107,7 @@
           </div>
           <h2>Torneios</h2>
           <p>Crie e gerencie torneios competitivos entre startups.</p>
-          <a
-            href="{% url 'list_tournaments' %}"
-            class="btn primary"
-            style="margin-top: 1rem"
-          >
+          <a href="{% url 'list_tournaments' %}" class="btn primary" style="margin-top: 1rem">
             Ver Torneios
           </a>
         </div>
@@ -165,7 +141,7 @@
         </div>
       </div>
       <div class="bottom-footer">
-        <p>&copy; 2025 Startup Rush. Todos os direitos reservados.</p>
+        <p>&copy; 2025 Startup Rush.</p>
       </div>
     </footer>
   </body>

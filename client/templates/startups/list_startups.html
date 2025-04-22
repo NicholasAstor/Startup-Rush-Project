@@ -6,12 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Startups | Startup Rush</title>
     <link rel="stylesheet" href="{% static 'css/list_startup.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   </head>
   <body>
+    <!--Barra de navegação na parte de cima da página, igual a da home-->
     <header class="cabecalho">
       <div class="logo">
         <a href="{% url 'home' %}">
@@ -21,34 +19,22 @@
       <nav>
         <ul>
           <li>
-            <a
-              href="{% url 'home' %}"
-              class="{% if request.path == '/' %}active{% endif %}"
-            >
+            <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
               <i class="fas fa-home"></i> Home
             </a>
           </li>
           <li>
-            <a
-              href="{% url 'startups_list' %}"
-              class="{% if 'startups' in request.path %} active {% endif %}"
-            >
+            <a href="{% url 'startups_list' %}" class="{% if 'startups' in request.path %} active {% endif %}">
               <i class="fas fa-building"></i> Startups
             </a>
           </li>
           <li>
-            <a
-              href="{% url 'list_tournaments' %}"
-              class="{% if 'tournaments' in request.path %}active{% endif %}"
-            >
+            <a href="{% url 'list_tournaments' %}" class="{% if 'tournaments' in request.path %}active{% endif %}">
               <i class="fas fa-trophy"></i> Torneios
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              class="{% if 'battles' in request.path %}active {% endif %}"
-            >
+            <a href="{% url 'pending_battles' %}" class="{% if 'battles' in request.path %}active {% endif %}">
               <i class="fas fa-fist-raised"></i> Batalhas
             </a>
           </li>
@@ -61,38 +47,19 @@
         <div class="formulario">
           <h2>Adicionar Startup</h2>
           <form id="formulario-startup">
+            <!-- Estou usando csrf token aqui por uma questão de segurança (principalemente na validação de formulários)mas na minha view de criar startup eu desativei a proteção -->
             {% csrf_token %}
             <div class="grupo-formulario">
               <label for="startup-name">Nome</label>
-              <input
-                type="text"
-                id="startup-name"
-                name="name"
-                placeholder="Nome da startup"
-                required
-              />
+              <input type="text" id="startup-name" name="name" placeholder="Nome da startup" required/>
             </div>
             <div class="grupo-formulario">
               <label for="startup-slogan">Slogan</label>
-              <input
-                type="text"
-                id="startup-slogan"
-                name="slogan"
-                placeholder="Slogan da startup"
-                required
-              />
+              <input type="text" id="startup-slogan" name="slogan" placeholder="Slogan da startup" required/>
             </div>
             <div class="grupo-formulario">
               <label for="startup-year">Ano de Fundação</label>
-              <input
-                type="number"
-                id="startup-year"
-                name="year_foundation"
-                placeholder="2025"
-                min="1900"
-                max="2025"
-                required
-              />
+              <input type="number" id="startup-year" name="year_foundation" placeholder="2025" min="1900" max="2025" required/>
             </div>
             <div class="acoes-formulario">
               <button type="submit" class="btn-primary">
@@ -104,7 +71,7 @@
 
         <div class="startups">
           <h2>Startups Cadastradas</h2>
-
+          <!--Quando existirem startups elas vão ser exibidas junto com seus 'feitos kk' caso contrário é exibido uma mensagem de que as mesmas não existem-->
           {% if startups %}
           <div class="list-startups">
             {% for startup in startups %}
@@ -112,31 +79,22 @@
               <h3>{{ startup.name }}</h3>
               <span class="year">Desde {{ startup.year_foundation }}</span>
               <p class="slogan">{{ startup.slogan }}</p>
-
               <div class="estatisticas">
                 <div class="coluna-estatisticas">
                   <span class="label-estatisticas">Vitórias:</span>
-                  <span class="valor-estatisticas"
-                    >{{ startupstats.total_wins|default:"0" }}</span
-                  >
+                  <span class="valor-estatisticas">{{ startup.startupstatistics.total_wins }}</span>
                 </div>
                 <div class="coluna-estatisticas">
                   <span class="label-estatisticas">Pitches:</span>
-                  <span class="valor-estatisticas"
-                    >{{ startupstats.total_pitches|default:"0" }}</span
-                  >
+                  <span class="valor-estatisticas">{{ startup.startupstatistics.total_pitches }}</span>
                 </div>
                 <div class="coluna-estatisticas">
                   <span class="label-estatisticas">Tração:</span>
-                  <span class="valor-estatisticas"
-                    >{{ startupstats.total_traction|default:"0" }}</span
-                  >
+                  <span class="valor-estatisticas">{{ startup.startupstatistics.total_traction }}</span>
                 </div>
                 <div class="coluna-estatisticas">
                   <span class="label-estatisticas">Shark Fights:</span>
-                  <span class="valor-estatisticas"
-                    >{{ startupstats.total_sharkfights|default:"0" }}</span
-                  >
+                  <span class="valor-estatisticas">{{ startup.startupstatistics.total_sharkfights }}</span>
                 </div>
               </div>
 
@@ -159,28 +117,22 @@
     </main>
 
     <script>
+      // JS necessário para o funcionamento tanto da adição de uma nova startup quanto a remoção de uma já existente
       document.addEventListener("DOMContentLoaded", function () {
-        const startupForm = document.getElementById("formulario-startup");
+        const formularioStartup = document.getElementById("formulario-startup");
 
-        startupForm.addEventListener("submit", function (event) {
+        formularioStartup.addEventListener("submit", function (event) {
           event.preventDefault();
 
-          const formData = {
+          const data = {
             name: document.getElementById("startup-name").value,
             slogan: document.getElementById("startup-slogan").value,
-            year_foundation: parseInt(
-              document.getElementById("startup-year").value
-            ),
+            year_foundation: parseInt(document.getElementById("startup-year").value),
           };
 
-          fetch('{% url "create_startup" %}', {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": "{{ csrf_token }}",
-            },
-            body: JSON.stringify(formData),
-          })
+          // Envia os dados para o endpoint de POST feito na view e cria uma nova startup, caso funcione a página é recarregada para conseguir exibir a nova startup
+          // caso o contrário uma mensagem de erro é exibida (eu não sei fazer pop-ups em Django então teve que ser o alert)
+          fetch(`create/`, { method: "POST", headers: {"Content-Type": "application/json","X-CSRFToken": "{{ csrf_token }}"}, body: JSON.stringify(data)})
             .then((response) => response.json())
             .then((data) => {
               if (data.success) {
@@ -195,17 +147,14 @@
             });
         });
 
-        const removeButtons = document.querySelectorAll(".btn-remove");
+        const removeBotoes = document.querySelectorAll(".btn-remove");
 
-        removeButtons.forEach((button) => {
-          button.addEventListener("click", function () {
-            const startupId = this.getAttribute("data-id");
+        removeBotoes.forEach((button) => {
+          button.addEventListener("click", function () { // Aqui vamos remover a startup com base no seu id, que conseguimos através do data-id que esta no botao de remover
+            const idStartup = this.getAttribute("data-id");
 
             if (confirm("Tem certeza que deseja deletar esta startup??")) {
-              fetch(`/startups/delete/${startupId}/`, {
-                method: "DELETE",
-                headers: { "X-CSRFToken": "{{ csrf_token }}" },
-              })
+              fetch(`/startups/delete/${idStartup}/`, {method: "DELETE",headers: { "X-CSRFToken": "{{ csrf_token }}" }})
                 .then((response) => response.json())
                 .then((data) => {
                   if (data.success) {

@@ -1,5 +1,6 @@
 from django.db import models
 
+# Como fica subentendedido esse é o meu arquivo de modelos, basicamente só declaro dentro do Django o que eu já tenho no meu banco
 class Startup(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)

@@ -6,12 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Torneios | Startup Rush</title>
     <link rel="stylesheet" href="{% static 'css/list_tournament.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   </head>
   <body>
+    <!--Barra de navegação da mesma forma que todas as outras páginas-->
     <header class="cabecalho">
       <div class="logo">
         <a href="{% url 'home' %}">
@@ -21,34 +19,22 @@
       <nav>
         <ul>
           <li>
-            <a
-              href="{% url 'home' %}"
-              class="{% if request.path == '/' %}active{% endif %}"
-            >
+            <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
               <i class="fas fa-home"></i> Home
             </a>
           </li>
           <li>
-            <a
-              href="{% url 'startups_list' %}"
-              class="{% if 'startups' in request.path %}active{% endif %}"
-            >
+            <a href="{% url 'startups_list' %}" class="{% if 'startups' in request.path %}active{% endif %}">
               <i class="fas fa-building"></i> Startups
             </a>
           </li>
           <li>
-            <a
-              href="{% url 'list_tournaments' %}"
-              class="{% if 'tournaments' in request.path %}active{% endif %}"
-            >
+            <a href="{% url 'list_tournaments' %}" class="{% if 'tournaments' in request.path %}active{% endif %}">
               <i class="fas fa-trophy"></i> Torneios
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              class="{% if 'battles' in request.path %}active{% endif %}"
-            >
+            <a href="{% url 'pending_battles' %}" class="{% if 'battles' in request.path %}active{% endif %}">
               <i class="fas fa-fist-raised"></i> Batalhas
             </a>
           </li>
@@ -57,11 +43,11 @@
     </header>
     <main class="container">
       <div class="conteudo">
-        {% block content %}
         <div class="pagina-torneios">
           <div class="criar-torneio">
+            <!--Formulário para criar um novo torneio, lógica parecida de criar uma startup com algumas dificuldades a mais-->
             <h2>Criar Novo Torneio</h2>
-
+            {% csrf_token %}
             <div class="selecionar-quantidade">
               <h3>Número de Startups</h3>
               <div class="opcoes-quantidade">
@@ -82,17 +68,17 @@
 
             <h3>Selecione as Startups Participantes</h3>
             <div class="lista-startups">
-              {% for startup in startups %}
-              <div class="startups">
-                <input
-                  type="checkbox"
-                  class="check-startups"
-                  id="startup-{{ startup.id }}"
-                  data-id="{{ startup.id }}"
-                />
-                <label for="startup-{{ startup.id }}">{{ startup.name }}</label>
-              </div>
-              {% endfor %}
+              {% if startups %}
+                <!--Percorre por todas as startups retornadas pela view e exibe elas na lista-->
+                {% for startup in startups %}
+                <div class="startups">
+                  <input type="checkbox" class="check-startups" id="startup-{{ startup.id }}" data-id="{{ startup.id }}"/>
+                  <label for="startup-{{ startup.id }}">{{ startup.name }}</label>
+                </div>
+                {% endfor %}
+              {% else %}
+                <p>Nenhuma startup cadastrada.</p>
+              {% endif %}
             </div>
 
             <p class="selecionadas" id="selecionadas">
@@ -103,63 +89,65 @@
           </div>
 
           <div class="painel-torneios">
+            {% if tournaments %}
             <h2>Torneios</h2>
+              <!--Do mesmo jeito que já foi feito outras vezes percorre a lista de torneios retornados e exibe algumas informações sobre-->
+              {% for tournament in tournaments %}
+              <div class="card-torneio">
+                <div class="header-torneio">
+                  <h3 class="titulo-torneio">Torneio #{{ tournament.id }}</h3>
+                  <span class="status-torneio status-{{ tournament.status }}">
+                    {{ tournament.get_status_display }}
+                  </span>
+                </div>
 
-            {% for tournament in tournaments %}
-            <div class="card-torneio">
-              <div class="header-torneio">
-                <h3 class="titulo-torneio">Torneio #{{ tournament.id }}</h3>
-                <span class="status-torneio status-{{ tournament.status }}">
-                  {{ tournament.get_status_display }}
-                </span>
+                <div class="meta-torneio">
+                  <span>{{ tournament.qty_startups }} startups</span>
+                  <span>{{ tournament.qty_rounds }} rodadas</span>
+                </div>
+                <!--Caso o torneio já tenha um vencedor, o mesmo é exibido-->
+                {% if tournament.champion %}
+                <p class="campeao-torneio">
+                  Campeão: {{ tournament.champion.name }}
+                </p>
+                {% endif %}
+                <a href="{% url 'tournament_detail' tournament.id %}" class="detalhes">Ver Detalhes</a>
               </div>
-
-              <div class="meta-torneio">
-                <span>{{ tournament.qty_startups }} startups</span>
-                <span>{{ tournament.qty_rounds }} rodadas</span>
-              </div>
-
-              {% if tournament.champion %}
-              <p class="campeao-torneio">
-                Campeão: {{ tournament.champion.name }}
-              </p>
-              {% endif %}
-
-              <a href="#" class="detalhes">Ver Detalhes</a>
+              {% endfor %}
+            {% else %}
+            <div class="caso-vazio">
+              <h3>Nenhum torneio criado ainda</h3>
+              <p>Comece seu primeiro torneio utilizando o formulário</p>
             </div>
-            {% empty %}
-            <p>Nenhum torneio criado ainda.</p>
-            {% endfor %}
+            {% endif %}
           </div>
         </div>
 
         <script>
           document.addEventListener("DOMContentLoaded", function () {
-            const quantityBtns = document.querySelectorAll(".botao-quantidade");
-            const startupCheckboxes =
-              document.querySelectorAll(".check-startups");
-            const createBtn = document.getElementById("criar");
-            const selectionInfo = document.getElementById("selecionadas");
-            const roundsInfo = document.getElementById("info-rounds");
+            const quantidadeBotoes = document.querySelectorAll(".botao-quantidade");
+            const checkboxStartup = document.querySelectorAll(".check-startups");
+            const criaBotao = document.getElementById("criar");
+            const infoSelecao = document.getElementById("selecionadas");
+            const infoRounds = document.getElementById("info-rounds");
 
             let selectedQty = 4;
             let selectedStartups = [];
 
-            quantityBtns.forEach((btn) => {
+            quantidadeBotoes.forEach((btn) => { //Atualiza as informações de acordo com qual botão foi clicado 
               btn.addEventListener("click", function () {
-                // Atualizar seleção visual
-                quantityBtns.forEach((b) => b.classList.remove("selected"));
+                quantidadeBotoes.forEach((b) => b.classList.remove("selected"));
                 this.classList.add("selected");
 
                 selectedQty = parseInt(this.dataset.qty);
 
-                updateRoundsInfo();
-                updateSelectionInfo();
-                updateCreateButton();
+                atualizaInformacoesRounds();
+                atualizaSelecao();
+                atualizaCriar();
               });
             });
 
-            startupCheckboxes.forEach((checkbox) => {
+            checkboxStartup.forEach((checkbox) => { // Evento de mudança para cada checkbox de startup
               checkbox.addEventListener("change", function () {
                 const startupId = parseInt(this.dataset.id);
 
@@ -171,42 +159,32 @@
                   );
                 }
 
-                updateSelectionInfo();
-                updateCreateButton();
+                atualizaSelecao();
+                atualizaCriar();
               });
             });
-
-            function updateRoundsInfo() {
+            // Eventos na hora dos cliques dos botões (atualizar as informações na página)
+            function atualizaInformacoesRounds() { // 
               const rounds = selectedQty === 4 ? 2 : selectedQty === 6 ? 3 : 4;
-              roundsInfo.textContent = `O torneio terá ${rounds} rodadas.`;
+              infoRounds.textContent = `O torneio terá ${rounds} rodadas.`;
             }
 
-            function updateSelectionInfo() {
-              selectionInfo.textContent = `Selecionadas: ${selectedStartups.length} de ${selectedQty} necessárias`;
+            function atualizaSelecao() {
+              infoSelecao.textContent = `Selecionadas: ${selectedStartups.length} de ${selectedQty} necessárias`;
             }
 
-            function updateCreateButton() {
-              createBtn.disabled = selectedStartups.length !== selectedQty;
+            function atualizaCriar() {
+              criaBotao.disabled = selectedStartups.length !== selectedQty;
             }
 
-            quantityBtns[0].click();
+            quantidadeBotoes[0].click();
 
-            createBtn.addEventListener("click", async function () {
-              createBtn.disabled = true;
-              createBtn.textContent = "Criando...";
+            criaBotao.addEventListener("click", async function () { // Cria o torneio já com as startups selecionadas e chama a view que faz o resto
+              criaBotao.disabled = true;
+              criaBotao.textContent = "Criando...";
 
-              try {
-                const response = await fetch('{% url "create_tournament" %}', {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}",
-                  },
-                  body: JSON.stringify({
-                    qty_startups: selectedQty,
-                    startups: selectedStartups,
-                  }),
-                });
+              try { 
+                const response = await fetch(`create/`, { method: "POST", headers: {"Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}"}, body: JSON.stringify({qty_startups: selectedQty, startups: selectedStartups,}),});
 
                 const data = await response.json();
 
@@ -219,13 +197,12 @@
                 console.error("Erro:", error);
                 alert("Erro ao criar torneio");
               } finally {
-                createBtn.disabled = false;
-                createBtn.textContent = "Criar Torneio";
+                criaBotao.disabled = false;
+                criaBotao.textContent = "Criar Torneio";
               }
             });
           });
         </script>
-        {% endblock %}
       </div>
     </main>
   </body>

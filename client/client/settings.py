@@ -34,8 +34,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'battles',
-    'events',
-    'rounds',
     'tournaments',
     'startups',
     "django.contrib.admin",
