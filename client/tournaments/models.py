@@ -27,7 +27,7 @@ class StartupTournament(models.Model):
     class Meta:
         managed = False
         db_table = 'Startup_tournament'
-        unique_together = (('startup', 'tournament'),)
+        unique_together = ('startup', 'tournament')
 
     def __str__(self):
         return f"{self.startup.name} in Tournament {self.tournament.id}"

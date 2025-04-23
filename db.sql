@@ -206,6 +206,28 @@ CREATE TABLE IF NOT EXISTS `startup_battle`.`Startup_tournament` (
     ON UPDATE NO ACTION) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ENGINE = InnoDB;
 
+INSERT INTO `startup_battle`.`Startup` (`name`, `slogan`, `year_foundation`, `active`)
+VALUES
+('DELL', 'The power to do more', 1984, 1),
+('Google', 'Organize the world’s information and make it universally accessible and useful', 1998, 1),
+('Apple', 'Think different', 1976, 1),
+('Microsoft', 'Empower every person and every organization on the planet to achieve more', 1975, 1),
+('Amazon', 'Work hard. Have fun. Make history.', 1994, 1),
+('Nvidia', 'The AI computing company', 1993, 1),
+('Meta', 'Give people the power to build community and bring the world closer together', 2004, 1),
+('Intel', 'Intel Innovation', 1968, 1);
+
+INSERT INTO `startup_battle`.`Startup_Statistics` (`startup_id`, `total_pitches`, `total_bugs`, `total_traction`, `total_pissed_investors`, `total_fakenews`, `total_sharkfights`, `total_wins`)
+VALUES
+(1,0,0,0,0,0,0,0),
+(2,0,0,0,0,0,0,0),
+(3,0,0,0,0,0,0,0),
+(4,0,0,0,0,0,0,0),
+(5,0,0,0,0,0,0,0),
+(6,0,0,0,0,0,0,0),
+(7,0,0,0,0,0,0,0),
+(8,0,0,0,0,0,0,0);
+
 INSERT INTO `startup_battle`.`Event` (`name`, `description`, `impact_score`)
 VALUES 
 ('Pitch convincente', 'Um pitch muito cativante', 6),

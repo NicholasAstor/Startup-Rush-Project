@@ -208,6 +208,8 @@ def complete_battle(request, battle_id):
                 
                 # Ah shit here we go again
                 random.shuffle(winners)
+
+                # Caso tenha 6 startups é sorteado aleatoriamente uma na segunda fase para passar automaticamente para a terceira
                 caso6 = None
                 if len(winners) % 2 != 0:
                     caso6 = winners.pop()

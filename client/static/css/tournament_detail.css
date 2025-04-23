@@ -79,7 +79,6 @@ nav ul li a.active {
   gap: 2rem;
 }
 
-/* Layout geral */
 .container-torneio {
   max-width: 1200px;
   margin: 0 auto;
@@ -105,7 +104,6 @@ nav ul li a.active {
   margin-right: 0.5rem;
 }
 
-/* Header do torneio */
 .header-torneio {
   background-color: #e9e4ff;
   border-radius: 10px;
@@ -152,7 +150,6 @@ nav ul li a.active {
   color: white;
 }
 
-/* Seção de rodadas */
 .round {
   margin-bottom: 3rem;
 }
@@ -171,7 +168,6 @@ nav ul li a.active {
   gap: 1.5rem;
 }
 
-/* Cards de batalha */
 .card-batalha {
   background-color: white;
   border-radius: 10px;
