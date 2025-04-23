@@ -7,7 +7,12 @@ import random
 
 from .models import Battle, EventBattle, Event
 from startups.models import Startup, StartupStatistics
-from tournaments.models import StartupTournament, Round
+from tournaments.models import Round
+
+# Todas as consultas que eu fiz nessa view a tabela Startup_tournament tiveram que ser feitas com SQL puro, 
+# por algum motivo o ORM do Django estava duplicando a quantidade de startups que tinha no projeto, mesmo sendo
+# só operações de consulta e atualização, enfim só destacando aqui porque é uma mudança que eu não esperava fazer
+# em tantas partes do código
 
 @csrf_protect
 def manage_battle(request, battle_id):
@@ -19,10 +24,32 @@ def manage_battle(request, battle_id):
     
     events = Event.objects.all()
     
-    # Buscar informações de torneio de cada startup
-    startup1_tournament = StartupTournament.objects.filter(startup=battle.startup1, tournament=battle.round.tournament).first()
-    
-    startup2_tournament = StartupTournament.objects.filter(startup=battle.startup2, tournament=battle.round.tournament).first()
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT startup_id, tournament_id, score 
+            FROM Startup_tournament 
+            WHERE startup_id = %s AND tournament_id = %s
+        """, [battle.startup1.id, battle.round.tournament.id])
+        startup1_tournament_row = cursor.fetchone()
+
+        cursor.execute("""
+            SELECT startup_id, tournament_id, score
+            FROM Startup_tournament
+            WHERE startup_id = %s AND tournament_id = %s
+        """, [battle.startup2.id, battle.round.tournament.id])
+        startup2_tournament_row = cursor.fetchone()
+
+        startup1_tournament = {
+            'startup_id': startup1_tournament_row[0],
+            'tournament_id': startup1_tournament_row[1],
+            'score': startup1_tournament_row[2]
+        } if startup1_tournament_row else None
+
+        startup2_tournament = {
+            'startup_id': startup2_tournament_row[0],
+            'tournament_id': startup2_tournament_row[1],
+            'score': startup2_tournament_row[2]
+        } if startup2_tournament_row else None
 
     if not startup1_tournament or not startup2_tournament:
         return JsonResponse({'success': False,'message': 'Algum problema no fluxo de torneio.'})
@@ -87,14 +114,26 @@ def add_event(request, battle_id):
         EventBattle.objects.create(battle=battle,startup=startup,event=event)
         
         # Atualizar pontuação da startup no torneio
-        startup_tournament = StartupTournament.objects.filter(startup=startup, tournament=battle.round.tournament).first() #Saudades sql ;(
-        startup_tournament.score += event.impact_score
-        startup_tournament.save()
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT score
+                FROM Startup_tournament 
+                WHERE startup_id = %s AND tournament_id = %s
+            """, [startup.id, battle.round.tournament.id])
+            current_score = cursor.fetchone()[0]
+            new_score = current_score + event.impact_score
+
+            cursor.execute("""
+                UPDATE Startup_tournament
+                SET score = %s
+                WHERE startup_id = %s AND tournament_id = %s
+            """, [new_score, startup.id, battle.round.tournament.id])
+            startup_tournament_score = new_score
         
         # Método auxiliar para atualizar as estatisticas da startup
         update_startup_statistics(startup, event)
         
-        return JsonResponse({'success': True,'score': startup_tournament.score,'message': f'Evento "{event.name}" adicionado a {startup.name}'})
+        return JsonResponse({'success': True,'score': startup_tournament_score,'message': f'Evento "{event.name}" adicionado a {startup.name}'})
     
     else:
         return JsonResponse({'success': False, 'message': 'Requisição inválida'})
@@ -131,33 +170,64 @@ def complete_battle(request, battle_id):
         if battle.status == 'done':
             return JsonResponse({'success': False,'message': 'Esta batalha já terminou'})
         
-        # Conseguir as pontuações das startups
-        startup1_tournament = StartupTournament.objects.filter(startup=battle.startup1, tournament=battle.round.tournament).first()
-        startup2_tournament = StartupTournament.objects.filter(startup=battle.startup2, tournament=battle.round.tournament).first()
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT startup_id, tournament_id, score 
+                FROM Startup_tournament 
+                WHERE startup_id = %s AND tournament_id = %s
+            """, [battle.startup1.id, battle.round.tournament.id])
+            startup1_tournament_row = cursor.fetchone()
+
+            cursor.execute("""
+                SELECT startup_id, tournament_id, score
+                FROM Startup_tournament
+                WHERE startup_id = %s AND tournament_id = %s
+            """, [battle.startup2.id, battle.round.tournament.id])
+            startup2_tournament_row = cursor.fetchone()
+
+            startup1_tournament = {
+                'startup_id': startup1_tournament_row[0],
+                'tournament_id': startup1_tournament_row[1],
+                'score': startup1_tournament_row[2]
+            } if startup1_tournament_row else None
+
+            startup2_tournament = {
+                'startup_id': startup2_tournament_row[0],
+                'tournament_id': startup2_tournament_row[1],
+                'score': startup2_tournament_row[2]
+            } if startup2_tournament_row else None
 
         stats1 = StartupStatistics.objects.filter(startup=battle.startup1).first()
         stats2 = StartupStatistics.objects.filter(startup=battle.startup2).first()
         
         # SHARKFIGHT!!!!!!
-        if startup1_tournament.score == startup2_tournament.score:
+        if startup1_tournament["score"] == startup2_tournament["score"]:
             battle.shark_fight = True
             battle.save()
             
             winner = random.choice([battle.startup1, battle.startup2])
             if winner == battle.startup1:
-                startup1_tournament.score += 2
-                startup1_tournament.save()
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                        UPDATE Startup_tournament
+                        SET score = score + 2
+                        WHERE startup_id = %s AND tournament_id = %s
+                    """, [battle.startup1.id, battle.round.tournament.id])
                 stats1.total_sharkfights += 1
                 stats1.save()
             else:
-                startup2_tournament.score += 2
-                startup2_tournament.save()
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                        UPDATE Startup_tournament
+                        SET score = score + 2
+                        WHERE startup_id = %s AND tournament_id = %s
+                    """, [battle.startup2.id, battle.round.tournament.id])
                 stats2.total_sharkfights += 1
                 stats2.save()
 
         # Vencedor da batalha
-        if startup1_tournament.score > startup2_tournament.score:
-            winner = battle.startup1
+        if startup1_tournament["score"] > startup2_tournament["score"]:
+            winner = battle.startup1    
             startup_winner = startup1_tournament
         else:
             winner = battle.startup2
@@ -168,8 +238,12 @@ def complete_battle(request, battle_id):
         battle.save()
         
         # Colocar os merecidos 30 pontos da vitória
-        startup_winner.score += 30
-        startup_winner.save()
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                UPDATE Startup_tournament
+                SET score = score + 30
+                WHERE startup_id = %s AND tournament_id = %s
+            """, [winner.id, battle.round.tournament.id])
         
         #Também atualizar as estatísticas do ganhador
         winner_stats = StartupStatistics.objects.filter(startup=winner).first()
@@ -219,9 +293,13 @@ def complete_battle(request, battle_id):
  
                 if caso6:
                     Battle.objects.create(round=next_round, startup1=caso6, startup2=None, winner=caso6, status='done')
-                    new_score = StartupTournament.objects.filter(startup = caso6, tournament=next_round.tournament).first()
-                    new_score.score += 30
-                    new_score.save()
+
+                    with connection.cursor() as cursor:
+                        cursor.execute("""
+                            UPDATE Startup_tournament
+                            SET score = score + 30
+                            WHERE startup_id = %s AND tournament_id = %s
+                        """, [caso6.id, next_round.tournament.id])
 
             else:
                 #FIM DO TORNEIO MEU AMIGOS
