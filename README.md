@@ -1,6 +1,6 @@
 # Desafio IT Academy
 
-Guia de execução para o projeto do 'Startup Rush'
+Execução para o projeto do 'Startup Rush'
 
 ## Requisitos
 
@@ -19,7 +19,7 @@ docker compose up --build
 
 ### Acessar a aplicação
 
-Uma vez que todos os contêineres estejam rodando, acesse a aplicação em:
+Quando estiver pronto o acesso a aplicação é feito através desse endereço:
 
 ```
 http://localhost:8000
@@ -47,5 +47,5 @@ docker compose up -d
 ## Estrutura da Aplicação
 
 - **Frontend**: Interface web construída com HTML, CSS, e JavaScript
-- **Backend**: API Django 
-- **Banco de Dados**: MySQL 8.0
+- **Backend**: Python (Django) 
+- **Banco de Dados**: MySQL
