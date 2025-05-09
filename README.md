@@ -1,6 +1,4 @@
-# Desafio IT Academy
-
-Execução para o projeto do 'Startup Rush'
+# Execução para o projeto do 'Startup Rush'
 
 ## Requisitos
 
